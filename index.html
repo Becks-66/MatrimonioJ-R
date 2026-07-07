@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Winky+Sans:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 220px; }
+  body { margin: 0; background: #E8E2D6; }
+  * { box-sizing: border-box; }
+  input::placeholder, textarea::placeholder { color: #6D6463; opacity: 0.55; }
+  input, textarea, button { font-family: 'Inter', system-ui, sans-serif; }
+  @keyframes lanternSwing {
+    0%, 100% { transform: translateX(-50%) rotate(-1.6deg); }
+    50%      { transform: translateX(-50%) rotate(1.6deg); }
+  }
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-9px); }
+  }
+  @keyframes floatEnvelope {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50%      { transform: translateY(-8px) rotate(2deg); }
+  }
+  .float-1 { animation: floatY 3.2s ease-in-out infinite; will-change: transform; }
+  .float-2 { animation: floatY 4.3s ease-in-out infinite; animation-delay: -0.8s; will-change: transform; }
+  .float-3 { animation: floatY 3.8s ease-in-out infinite; animation-delay: -1.4s; will-change: transform; }
+  .float-envelope { animation: floatEnvelope 3.5s ease-in-out infinite; animation-delay: -0.5s; transform-origin: 50% 40%; will-change: transform; }
+  .page-shell {
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    background-color: #FCF9F1;
+    background-image: url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='260'%20height='220'%20viewBox='0%200%20260%20220'%3e%3cg%20fill='none'%20stroke='%23C9A84C'%20stroke-width='2.4'%20stroke-linecap='round'%20stroke-linejoin='round'%20opacity='0.16'%3e%3cpath%20d='M40%2074%20q6%20-20%2026%20-15%20q4%20-20%2026%20-12%20q12%20-14%2026%203%20q16%20-6%2018%2015%20q14%202%208%2018%20q-8%2012%20-22%206'%3e%3c/path%3e%3cpath%20d='M40%2074%20a9%209%200%201%200%20-3%20-13'%3e%3c/path%3e%3cpath%20d='M92%2047%20a7%207%200%201%201%208%20-3'%3e%3c/path%3e%3cpath%20d='M158%20178%20q6%20-20%2026%20-15%20q4%20-20%2026%20-12%20q12%20-14%2026%203%20q16%20-6%2018%2015%20q14%202%208%2018%20q-8%2012%20-22%206'%3e%3c/path%3e%3cpath%20d='M158%20178%20a9%209%200%201%200%20-3%20-13'%3e%3c/path%3e%3cpath%20d='M210%20151%20a7%207%200%201%201%208%20-3'%3e%3c/path%3e%3c/g%3e%3c/svg%3e");
+    background-size: 260px 220px;
+    background-repeat: repeat;
+    min-height: 100vh;
+    position: relative;
+    overflow: visible;
+    box-shadow: 0 0 60px rgba(139, 26, 26, 0.08);
+  }
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    width: 100%;
+    height: 132px;
+  }
+  .site-header-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(252, 249, 241, 0.55);
+    backdrop-filter: blur(10px) saturate(1.1);
+    -webkit-backdrop-filter: blur(10px) saturate(1.1);
+    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+    pointer-events: none;
+  }
+  .menu-indicator {
+    position: absolute;
+    left: 4px;
+    top: 76px;
+    width: 44px;
+    height: 62px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 8px 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+    z-index: 3;
+  }
+  .menu-indicator-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background: #6D6463;
+    transition: width .18s ease, background .18s ease;
+  }
+  .menu-indicator-line.is-active {
+    width: 30px;
+    background: #8B1A1A;
+  }
+  .lantern-header {
+    position: absolute;
+    left: 50%;
+    top: 2px;
+    transform: translateX(-50%);
+    transform-origin: 50% 0;
+    animation: lanternSwing 5s ease-in-out infinite;
+    width: 352px;
+    height: 88px;
+    object-fit: contain;
+    pointer-events: none;
+  }
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: #FCF9F1;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    max-width: 430px;
+    margin: 0 auto;
+  }
+  .menu-close {
+    align-self: flex-start;
+    background: transparent;
+    border: none;
+    font-size: 34px;
+    line-height: 1;
+    color: #000;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 36px;
+  }
+  .menu-brand {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: baseline;
+    font-family: 'Winky Sans', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    margin-bottom: 6px;
+  }
+  .text-red { color: #8B1A1A; }
+  .text-gold { color: #C9A84C; }
+  .menu-date {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: #C9A84C;
+    margin-bottom: 40px;
+  }
+  .menu-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .menu-nav-link {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    color: #000;
+    text-decoration: none;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  }
+  .menu-nav-link--primary {
+    font-weight: 700;
+    color: #8B1A1A;
+    border-bottom: none;
+  }
+  .section {
+    padding: 28px 28px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  .section--hero {
+    padding: 14px 28px 52px;
+    gap: 26px;
+  }
+  .section--when {
+    gap: 22px;
+  }
+  .section--faqs {
+    align-items: stretch;
+  }
+  .section--form {
+    padding: 28px 20px 56px;
+    gap: 24px;
+  }
+  .logo-image {
+    width: 230px;
+    height: 112px;
+    object-fit: cover;
+    object-position: center;
+  }
+  .soft-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    background: #FCF9F1;
+    border-radius: 20px;
+    padding: 10px 20px;
+    box-shadow: 0 0 28px 12px #FCF9F1;
+    position: relative;
+  }
+  .soft-panel--date {
+    gap: 4px;
+    padding: 10px 22px;
+  }
+  .copy-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+    background: #FCF9F1;
+    border-radius: 22px;
+    padding: 18px 16px;
+    box-shadow: 0 0 32px 15px #FCF9F1;
+    position: relative;
+  }
+  .copy-panel--card {
+    width: 100%;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px #C9A84C;
+  }
+  .hero-name {
+    font-family: 'Winky Sans', sans-serif;
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 1.05;
+    color: #8B1A1A;
+  }
+  .hero-amp {
+    font-family: 'Winky Sans', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1;
+    color: #C9A84C;
+  }
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: #8B1A1A;
+  }
+  .hero-date {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 1.2;
+    color: #C9A84C;
+  }
+  .countdown {
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px #C9A84C;
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+    padding: 16px 22px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .countdown-unit {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    min-width: 44px;
+  }
+  .countdown-unit--hours { min-width: 26px; }
+  .countdown-unit--minutes { min-width: 48px; }
+  .countdown-number,
+  .countdown-divider {
+    font-family: 'Winky Sans', sans-serif;
+    font-size: 40px;
+    line-height: 1;
+    color: #000;
+  }
+  .countdown-number { font-weight: 500; }
+  .countdown-label {
+    font-family: 'Winky Sans', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1;
+    color: #000;
+  }
+  .section-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    color: #C9A84C;
+    text-align: center;
+  }
+  .section-title--display {
+    font-family: 'Geist', sans-serif;
+  }
+  .ornament {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 6px;
+    opacity: 0.8;
+  }
+  .ornament-dot-sm,
+  .ornament-dot {
+    border-radius: 100px;
+    background: #C9A84C;
+  }
+  .ornament-dot-sm {
+    width: 4px;
+    height: 4px;
+  }
+  .ornament-dot {
+    width: 6px;
+    height: 6px;
+  }
+  .ornament-line {
+    height: 2px;
+    flex: 1;
+    background: #C9A84C;
+  }
+  .body-copy {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+    color: #000;
+  }
+  .highlight-copy {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+    color: #000;
+    background: #FCF9F1;
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 0 30px 12px #FCF9F1;
+    position: relative;
+  }
+  .highlight-copy--spaced {
+    margin-bottom: 4px;
+  }
+  .feature-dragon {
+    width: 250px;
+    height: auto;
+    margin-top: 4px;
+  }
+  .event-card {
+    width: 280px;
+    border-radius: 12px;
+    border: 1px solid #C9A84C;
+    background: #FCF9F1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 32px;
+    align-items: flex-start;
+  }
+  .event-card-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .event-label,
+  .venue-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1.25;
+    color: #C9A84C;
+  }
+  .event-value {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    color: #8B1A1A;
+  }
+  .event-value--nowrap {
+    white-space: nowrap;
+  }
+  .event-separator {
+    width: 100%;
+    height: 1px;
+    background: #C9A84C;
+    opacity: 0.3;
+  }
+  .venue-block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  .venue-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+  }
+  .venue-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.15;
+    color: #8B1A1A;
+  }
+  .venue-address {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #6D6463;
+  }
+  .venue-images,
+  .gift-images,
+  .action-row,
+  .choice-row {
+    display: flex;
+    flex-direction: row;
+  }
+  .venue-images {
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+  }
+  .venue-photo {
+    flex: 0 1 auto;
+    min-width: 0;
+    height: 130px;
+    object-fit: contain;
+  }
+  .venue-map-link {
+    flex: 0 1 auto;
+    min-width: 0;
+    display: inline-flex;
+    cursor: pointer;
+  }
+  .venue-map-link:focus-visible {
+    outline: 2px solid #8B1A1A;
+    outline-offset: 4px;
+  }
+  .venue-dragon {
+    flex: 0 1 auto;
+    min-width: 0;
+    height: 210px;
+    object-fit: contain;
+  }
+  .action-row {
+    gap: 12px;
+    align-items: stretch;
+  }
+  .button-link {
+    border-radius: 100px;
+    padding: 16px 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .button-link--primary {
+    flex: 0 0 auto;
+    background: #8B1A1A;
+    color: #fff;
+  }
+  .button-link--secondary {
+    flex: 1;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px #8B1A1A;
+    color: #8B1A1A;
+    text-align: center;
+  }
+  .hotel-dragon {
+    width: 250px;
+    max-width: 85%;
+    height: auto;
+    object-fit: contain;
+  }
+  .gift-images {
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .gift-dragon {
+    width: 250px;
+    height: auto;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+  }
+  .gift-envelope {
+    width: 160px;
+    height: auto;
+    object-fit: contain;
+    margin-left: -36px;
+    position: relative;
+    z-index: 1;
+  }
+  .text-link {
+    color: #8B1A1A;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+  .faq-item {
+    border-top: 1px solid rgba(201, 168, 76, 0.4);
+    background: #FCF9F1;
+    box-shadow: 0 0 30px 10px #FCF9F1;
+    position: relative;
+    padding: 0 4px;
+  }
+  .faq-button {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 16px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .faq-question {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #000;
+  }
+  .faq-icon {
+    transform: rotate(0deg);
+    transition: transform .2s;
+    color: #8B1A1A;
+    font-size: 24px;
+    line-height: 1;
+    font-family: 'Inter', system-ui, sans-serif;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+  .faq-icon.is-open {
+    transform: rotate(45deg);
+  }
+  .faq-answer {
+    margin: 0;
+    padding: 0 0 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6D6463;
+    white-space: pre-line;
+  }
+  .form-card {
+    width: 100%;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px #C9A84C;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .form-card--thanks {
+    gap: 14px;
+    padding: 40px 24px;
+    align-items: center;
+    text-align: center;
+  }
+  .form-card--fields {
+    gap: 32px;
+    padding: 32px 16px;
+  }
+  .thanks-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: #8B1A1A;
+  }
+  .edit-response-button {
+    margin-top: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #C9A84C;
+    text-decoration: underline;
+  }
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .form-field--choice {
+    gap: 10px;
+  }
+  .form-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: #000;
+  }
+  .form-label--small {
+    font-size: 12px;
+  }
+  .text-input {
+    height: 48px;
+    border: 1px solid #D6C8BC;
+    border-radius: 8px;
+    padding: 0 14px;
+    background: #fff;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #000;
+    outline: none;
+    width: 100%;
+    transition: background .15s, border-color .15s, box-shadow .15s;
+  }
+  .text-input:hover {
+    border-color: #BFAE9D;
+    background: #fff;
+  }
+  .text-input:focus {
+    border-color: #8B1A1A;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.24);
+  }
+  .choice-row {
+    gap: 12px;
+  }
+  .choice-pill {
+    height: 44px;
+    border-radius: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    cursor: pointer;
+    text-align: center;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 0 8px;
+    transition: background .15s, color .15s;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px #B1A8A4;
+    color: #6D6463;
+  }
+  .choice-pill.is-selected {
+    background: #8B1A1A;
+    box-shadow: none;
+    color: #fff;
+  }
+  .submit-button {
+    height: 56px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    background: #8B1A1A;
+    color: #fff;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    width: 100%;
+    transition: background .15s;
+  }
+  .submit-button.is-disabled {
+    cursor: not-allowed;
+    background: #C9A2A2;
+  }
+  @keyframes revealUp {
+    from { opacity: 0; transform: translateY(64px) scale(0.94); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .reveal { opacity: 1; }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        opacity: 0;
+        animation: revealUp cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-timeline: view();
+        animation-range: entry 2% entry 40%;
+      }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lantern-header, .float-1, .float-2, .float-3, .float-envelope { animation: none !important; }
+  }
+</style>
+</helmet>
+
+<div class="page-shell">
+
+  <header class="site-header">
+    <div aria-hidden="true" class="site-header-scrim"></div>
+    <button onClick="{{toggleMenu}}" aria-label="Apri menu" class="menu-indicator">
+      <sc-for list="{{menuLines}}" as="line" hint-placeholder-count="4">
+        <span aria-hidden="true" class="{{line.className}}"></span>
+      </sc-for>
+    </button>
+    <img src="/assets/header-B5G1dn7h.png" alt="Lanterne cinesi" class="lantern-header">
+  </header>
+
+  <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+    <div class="menu-overlay">
+      <button onClick="{{closeMenu}}" aria-label="Chiudi menu" class="menu-close">×</button>
+      <span class="menu-brand"><span class="text-red">Jiayi</span><span class="text-gold">&amp;</span><span class="text-red">Rebecca</span></span>
+      <span class="menu-date">6 OTTOBRE 2026 · PRATO</span>
+      <nav class="menu-nav">
+        <a href="#hero" onClick="{{goHero}}" class="menu-nav-link">Home</a>
+        <a href="#benvenuti" onClick="{{closeMenu}}" class="menu-nav-link">Benvenuti</a>
+        <a href="#quando" onClick="{{goQuando}}" class="menu-nav-link">Quando e dove</a>
+        <a href="#hotel" onClick="{{closeMenu}}" class="menu-nav-link">Hotel</a>
+        <a href="#regalo" onClick="{{goRegalo}}" class="menu-nav-link">Regalo</a>
+        <a href="#faqs" onClick="{{goFaqs}}" class="menu-nav-link">FAQs</a>
+        <a href="#form" onClick="{{closeMenu}}" class="menu-nav-link menu-nav-link--primary">Conferma presenza</a>
+      </nav>
+    </div>
+  </sc-if>
+
+  <main>
+
+    <section id="hero" class="section section--hero">
+      <img src="/assets/logo-Cb6qvTcr.png" alt="Doppia felicità" class="logo-image">
+      <div class="soft-panel">
+        <span class="hero-name">Jiayi</span>
+        <span class="hero-amp">&amp;</span>
+        <span class="hero-name">Rebecca</span>
+      </div>
+      <div class="soft-panel soft-panel--date">
+        <span class="eyebrow">MARTEDÍ</span>
+        <span class="hero-date">6 Ottobre, 2026</span>
+        <span class="eyebrow">PRATO</span>
+      </div>
+      <sc-if value="{{showCountdown}}" hint-placeholder-val="{{true}}">
+        <div class="countdown">
+          <div class="countdown-unit">
+            <span class="countdown-number">{{days}}</span>
+            <span class="countdown-label">GIORNI</span>
+          </div>
+          <span class="countdown-divider">:</span>
+          <div class="countdown-unit countdown-unit--hours">
+            <span class="countdown-number">{{hours}}</span>
+            <span class="countdown-label">ORE</span>
+          </div>
+          <span class="countdown-divider">:</span>
+          <div class="countdown-unit countdown-unit--minutes">
+            <span class="countdown-number">{{minutes}}</span>
+            <span class="countdown-label">MINUTI</span>
+          </div>
+        </div>
+      </sc-if>
+    </section>
+
+    <section id="benvenuti" class="section reveal">
+      <div class="soft-panel">
+        <span class="section-title">BENVENUTI</span>
+        <div class="ornament">
+          <div class="ornament-dot-sm"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-line"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-dot-sm"></div>
+        </div>
+      </div>
+      <div class="copy-panel">
+        <p class="body-copy">Se siete finiti qui é perché siete stati ufficialmente invitati al nostro matrimonio! O avete rubato l'invito a qualcun'altro.</p>
+        <p class="body-copy">Pensiamo che questo sia un ottimo anno per sposarsi. Del resto sono convolati a nozze Zendaya e Tom Holland, Dua Lipa e Callum Turner, Taylor Swift e Travis Kelce, Charles Leclerc e Alexandra. Poi Damiano ha fatto la proposta a Dove Cameron, e sembra che siano fidanzati anche Harry Styles e Zoë Kravitz.</p>
+        <p class="body-copy">Il nostro matrimonio manterrà sicuramente un profilo più basso, e gli sposi saranno molto meno fotogenici. Speriamo comunque che parteciperete e che vi divertiate lo stesso!</p>
+        <p class="body-copy">Cercheremo di unire elementi cinesi ed elementi tipici italiani, per celebrare sia lo sposo che la sposa. Non promettiamo grandi cose, ma cercheremo di fare del nostro meglio.</p>
+      </div>
+      <sc-if value="{{showDragons}}" hint-placeholder-val="{{true}}">
+        <img src="/assets/draghetto-jmRlM8W6.png" alt="Draghetto" class="float-1 feature-dragon">
+      </sc-if>
+    </section>
+
+    <section id="quando" class="section section--when reveal">
+      <div class="soft-panel">
+        <span class="section-title">QUANDO E DOVE</span>
+        <div class="ornament">
+          <div class="ornament-dot-sm"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-line"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-dot-sm"></div>
+        </div>
+      </div>
+
+      <div class="event-card">
+        <div class="event-card-row">
+          <span class="event-label">Giorno</span>
+          <span class="event-value event-value--nowrap">6 Ottobre 2026</span>
+        </div>
+        <div class="event-separator"></div>
+        <div class="event-card-row">
+          <span class="event-label">CERIMONIA</span>
+          <span class="event-value">11:30</span>
+        </div>
+        <div class="event-separator"></div>
+        <div class="event-card-row">
+          <span class="event-label">APERITIVO E PRANZO</span>
+          <span class="event-value">12:30 - 19:30</span>
+        </div>
+      </div>
+
+      <div class="venue-block">
+        <div class="venue-details">
+          <span class="venue-label">PRESSO</span>
+          <span class="venue-name">La Limonaia 22</span>
+          <span class="venue-address">Via Firenze, 83, 59100 Prato PO</span>
+        </div>
+        <div class="venue-images">
+          <a href="{{mapsUrl}}" target="_blank" rel="noopener" aria-label="Apri La Limonaia 22 su Google Maps" class="venue-map-link">
+            <img src="/assets/IMG_0824-Bz54SQSP.PNG" alt="La Limonaia 22" class="float-2 venue-photo" />
+          </a>
+          <img src="/assets/IMG_0823-ihOaq7gG.PNG" alt="Draghetto" class="float-1 venue-dragon" />
+        </div>
+        <div class="action-row">
+          <a href="{{mapsUrl}}" target="_blank" rel="noopener" class="button-link button-link--primary">Come arrivare</a>
+          <a href="{{icsUrl}}" download="matrimonio-jiayi-rebecca.ics" class="button-link button-link--secondary">Aggiungi al calendario</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="hotel" class="section reveal">
+      <div class="soft-panel">
+        <span class="section-title section-title--display">E SE NON SON DI PRATO? O PEGGIO, NON SONO PROPRIO TOSCANO?</span>
+        <div class="ornament">
+          <div class="ornament-dot-sm"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-line"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-dot-sm"></div>
+        </div>
+      </div>
+      <div class="copy-panel">
+        <p class="body-copy">Innanzitutto, partiamo malissimo. Tuttavia, per chi abita lontano o ha necessità, offriremo la possibilitá di alloggiare in un hotel nella fantastica Prato la notte precedente la cerimonia.</p>
+        <p class="body-copy">Potete farci sapere nel form apposito in fondo alla pagina.</p>
+        <p class="body-copy">Nei prossimi mesi inseriremo qui sotto le informazioni sull'Hotel prenotato.</p>
+      </div>
+      <img src="/assets/hotel-dragon-BUv7zAef.png" alt="Info hotel prossimamente" class="float-2 hotel-dragon">
+    </section>
+
+    <section id="regalo" class="section reveal">
+      <div class="soft-panel">
+        <span class="section-title section-title--display">TUTTO BELLO MA... IL REGALO?</span>
+        <div class="ornament">
+          <div class="ornament-dot-sm"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-line"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-dot-sm"></div>
+        </div>
+      </div>
+      <p class="highlight-copy">La vostra presenza al matrimonio é il regalo più bello di tutti. Però, se desiderate omaggiarci anche di un bel dono, fatelo seguendo l'usanza cinese delle buste rosse (che vi abbiamo fornito con l'invito).</p>
+      <div class="gift-images">
+        <img src="/assets/dragon-glasses-C6SCzHph.png" alt="Draghetto con occhiali da sole che lancia le buste rosse" class="float-3 gift-dragon">
+        <img src="/assets/red-envelope-Be_htUOi.png" alt="Busta rossa (Hongbao)" class="float-envelope gift-envelope">
+      </div>
+      <p class="highlight-copy">In Cina si usa donare agli sposi delle buste rosse (<em data-om-id="b171ace9:132">Hongbao</em>), contenenti una somma di denaro a scelta dell'ospite. La busta é rossa, poiché é il colore che per eccellenza simboleggia fortuna. La somma dovrebbe essere preferibilmente pari e non contenere il numero 4, ma gli 8 sono graditi.</p>
+      <p class="highlight-copy">Se invece vi sentite generosi e volete allegare alla busta un regalo fisico, potete scegliere tra gli oggetti inseriti in questa <a href="#" class="text-link">lista Amazon</a>.</p>
+    </section>
+
+    <section id="faqs" class="section section--faqs reveal">
+      <div class="soft-panel">
+        <span class="section-title section-title--display">FAQs</span>
+        <div class="ornament">
+          <div class="ornament-dot-sm"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-line"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-dot-sm"></div>
+        </div>
+      </div>
+      <p class="highlight-copy highlight-copy--spaced">Non poteva mancare la sezione delle domande più frequenti! In realtà nessuno ci ha chiesto niente, ma rispondiamo in anticipo ai vostri dubbi.</p>
+      <sc-for list="{{faqs}}" as="f" hint-placeholder-count="5">
+        <div class="faq-item">
+          <button onClick="{{f.toggle}}" class="faq-button">
+            <span class="faq-question">{{f.q}}</span>
+            <span class="{{f.chevronClass}}">+</span>
+          </button>
+          <sc-if value="{{f.open}}" hint-placeholder-val="{{false}}">
+            <p class="faq-answer">{{f.a}}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+    </section>
+
+    <section id="form" class="section section--form reveal">
+      <div class="soft-panel">
+        <span class="section-title section-title--display">CONFERMACI LA TUA PRESENZA</span>
+        <span class="body-copy">Rispondi al form entro il 10 di Agosto.</span>
+        <div class="ornament">
+          <div class="ornament-dot-sm"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-line"></div>
+          <div class="ornament-dot"></div>
+          <div class="ornament-dot-sm"></div>
+        </div>
+      </div>
+
+      <sc-if value="{{submitted}}" hint-placeholder-val="{{false}}">
+        <div class="form-card form-card--thanks">
+          <span class="thanks-title">Grazie{{firstNameSuffix}}</span>
+          <p class="body-copy">{{confirmMsg}}</p>
+          <button onClick="{{reset}}" class="edit-response-button">Modifica la risposta</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{notSubmitted}}" hint-placeholder-val="{{true}}">
+        <div class="form-card form-card--fields">
+
+          <div class="form-field">
+            <label class="form-label form-label--small">NOME/I</label>
+            <input value="{{nome}}" onInput="{{onNome}}" placeholder="Il tuo (o i vostri) nomi in caso di invito di coppia" class="text-input" required="{{nameRequired}}" aria-required="true">
+          </div>
+
+          <div class="form-field form-field--choice">
+            <label class="form-label">SARAI / SARETE PRESENTE/I ALLA CERIMONIA?</label>
+            <div class="choice-row" role="radiogroup" aria-label="Presenza" aria-required="true">
+              <div onClick="{{setPresYes}}" class="{{presYesClass}}">Certo che ci sono!</div>
+              <div onClick="{{setPresNo}}" class="{{presNoClass}}">Purtroppo non verrò</div>
+            </div>
+          </div>
+
+          <div class="form-field form-field--choice">
+            <label class="form-label">HAI / AVETE BISOGNO DI UN HOTEL PER LA NOTTE PRECEDENTE LA CERIMONIA?</label>
+            <div class="choice-row" role="radiogroup" aria-label="Hotel">
+              <div onClick="{{setHotelYes}}" class="{{hotelYesClass}}">Sì</div>
+              <div onClick="{{setHotelNo}}" class="{{hotelNoClass}}">No</div>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">DIETA, ALLERGIE O ALTRO</label>
+            <input value="{{diet}}" onInput="{{onDiet}}" placeholder="vegetariano, vegano, celiachia, allergie, ..." class="text-input">
+          </div>
+
+          <button onClick="{{submit}}" class="{{submitClass}}" disabled="{{submitDisabled}}">Invia conferma</button>
+        </div>
+      </sc-if>
+    </section>
+
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;weddingDateTime&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;2026-10-06T11:30:00+02:00&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Matrimonio&quot; },
+  &quot;showCountdown&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Matrimonio&quot; },
+  &quot;showDragons&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Matrimonio&quot; }
+}">
+class Component extends DCLogic {
+  state = { menuOpen: false, activeSection: 'hero', faqOpen: {}, nome: '', diet: '', presence: null, hotel: null, submitted: false, now: Date.now() };
+  sectionIds = ['hero', 'quando', 'regalo', 'faqs'];
+
+  componentDidMount() {
+    this._t = setInterval(() => this.setState({ now: Date.now() }), 30000);
+    this._onScroll = () => this.updateActiveSection();
+    this._onHashChange = () => this.syncActiveFromHash();
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    window.addEventListener('hashchange', this._onHashChange);
+    this.updateActiveSection();
+    this.syncActiveFromHash();
+    try {
+      const s = JSON.parse(localStorage.getItem('rsvp_jr') || 'null');
+      if (s && s.submitted) this.setState({ submitted: true, nome: s.nome || '', presence: s.presence, hotel: s.hotel, diet: s.diet || '' });
+    } catch (e) {}
+  }
+  componentWillUnmount() {
+    clearInterval(this._t);
+    if (this._onScroll) {
+      window.removeEventListener('scroll', this._onScroll);
+      window.removeEventListener('hashchange', this._onHashChange);
+    }
+  }
+
+  syncActiveFromHash() {
+    const id = location.hash ? location.hash.slice(1) : '';
+    if (this.sectionIds.includes(id) && id !== this.state.activeSection) {
+      this.setState({ activeSection: id });
+    }
+  }
+
+  updateActiveSection() {
+    const marker = 240;
+    let active = this.sectionIds[0];
+    for (const id of this.sectionIds) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      if (el.getBoundingClientRect().top <= marker) active = id;
+    }
+    if (active !== this.state.activeSection) this.setState({ activeSection: active });
+  }
+
+  goSection(id) {
+    this.setState({ menuOpen: false, activeSection: id });
+  }
+
+  submitGoogleForm(data) {
+    const formData = new FormData();
+    formData.append('entry.276266745', data.nome);
+    formData.append('entry.1686584648', data.presence === 'yes' ? 'SI' : 'NO');
+    if (data.hotel) formData.append('entry.30867323', data.hotel === 'yes' ? 'SI' : 'NO');
+    if (data.diet) formData.append('entry.1771050951', data.diet);
+
+    return fetch('https://docs.google.com/forms/d/e/1FAIpQLSfapG7_oFNs2MXKLmODvNB8Ona_oHArZfPN_5cSIXR6rTaV9Q/formResponse', {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    });
+  }
+
+  renderVals() {
+    const target = new Date(this.props.weddingDateTime || '2026-10-06T11:30:00+02:00').getTime();
+    let diff = Math.max(0, target - this.state.now);
+    const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+    const h = Math.floor(diff / 3600000); diff -= h * 3600000;
+    const m = Math.floor(diff / 60000);
+
+    const pillClass = (selected) => selected ? 'choice-pill is-selected' : 'choice-pill';
+
+    const rawFaqs = [
+      { q: 'Cosa si può lanciare agli sposi?', a: 'É consentito tirare il riso agli sposi.\nTuttavia non sono consentiti: coriandoli, materiali non biodegradabili, improperi, maledizioni, sassi.\nMa se lanciate cuccioli di gatto, la sposa sarà contenta di prenderli al volo.' },
+      { q: 'C\u2019é un dress code particolare?', a: 'No, vi accogliamo qualunque cosa decidiate di indossare. Basta che vi sentiate a vostro agio e bellissimi.' },
+      { q: 'Ma il menù? Icchè si mangia?', a: 'Non vi si dice.' },
+      { q: 'C\u2019é il parcheggio?', a: 'La location é dotata di parcheggio privato interno.' },
+      { q: 'Ci sarà un open bar?', a: 'No, non sarà presente un open bar ma non temete, verrà servito dell\u2019alcol durante l\u2019aperitivo e il pranzo.' }
+    ];
+    const faqs = rawFaqs.map((f, i) => ({
+      q: f.q, a: f.a, open: !!this.state.faqOpen[i],
+      toggle: () => this.setState(s => ({ faqOpen: { ...s.faqOpen, [i]: !s.faqOpen[i] } })),
+      chevronClass: this.state.faqOpen[i] ? 'faq-icon is-open' : 'faq-icon'
+    }));
+
+    const ics = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Jiayi Rebecca//Matrimonio//IT', 'BEGIN:VEVENT',
+      'UID:matrimonio-jiayi-rebecca-20261006', 'DTSTART:20261006T093000Z', 'DTEND:20261006T173000Z',
+      'SUMMARY:Matrimonio Jiayi & Rebecca', 'LOCATION:La Limonaia 22\\, Via Firenze 83\\, 59100 Prato PO',
+      'DESCRIPTION:Cerimonia ore 11:30\\, aperitivo e pranzo 12:30-19:30', 'END:VEVENT', 'END:VCALENDAR'
+    ].join('\r\n');
+
+    const first = (this.state.nome || '').trim().split(/\s+/)[0] || '';
+    const camePres = this.state.presence;
+    let msg;
+    if (camePres === 'no') msg = 'Ci dispiace che non potrai esserci. Ci mancherai! Grazie comunque per avercelo fatto sapere.';
+    else msg = 'Abbiamo ricevuto la tua conferma. Non vediamo l\u2019ora di festeggiare con te il 6 Ottobre!';
+
+    const canSubmit = this.state.nome.trim() !== '' && this.state.presence != null;
+    const submitClass = canSubmit ? 'submit-button' : 'submit-button is-disabled';
+    const menuLines = this.sectionIds.map(id => {
+      const active = id === this.state.activeSection;
+      return {
+        id,
+        className: active ? 'menu-indicator-line is-active' : 'menu-indicator-line'
+      };
+    });
+
+    return {
+      days: String(d), hours: String(h), minutes: String(m),
+      showCountdown: this.props.showCountdown !== false,
+      showDragons: this.props.showDragons !== false,
+      menuOpen: this.state.menuOpen,
+      menuLines,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      goHero: () => this.goSection('hero'),
+      goQuando: () => this.goSection('quando'),
+      goRegalo: () => this.goSection('regalo'),
+      goFaqs: () => this.goSection('faqs'),
+      faqs,
+      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=La%20Limonaia%2022%20Via%20Firenze%2083%20Prato',
+      icsUrl: 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics),
+      nome: this.state.nome, diet: this.state.diet,
+      onNome: (e) => this.setState({ nome: e.target.value }),
+      onDiet: (e) => this.setState({ diet: e.target.value }),
+      setPresYes: () => this.setState({ presence: 'yes' }),
+      setPresNo: () => this.setState({ presence: 'no' }),
+      setHotelYes: () => this.setState({ hotel: 'yes' }),
+      setHotelNo: () => this.setState({ hotel: 'no' }),
+      presYesClass: pillClass(this.state.presence === 'yes'),
+      presNoClass: pillClass(this.state.presence === 'no'),
+      hotelYesClass: pillClass(this.state.hotel === 'yes'),
+      hotelNoClass: pillClass(this.state.hotel === 'no'),
+      submitClass,
+      nameRequired: true,
+      submitDisabled: !canSubmit,
+      submit: () => {
+        if (this.state.nome.trim() === '' || this.state.presence == null) return;
+        const data = { submitted: true, nome: this.state.nome, presence: this.state.presence, hotel: this.state.hotel, diet: this.state.diet };
+        this.submitGoogleForm(data).catch(() => {});
+        try { localStorage.setItem('rsvp_jr', JSON.stringify(data)); } catch (e) {}
+        this.setState({ submitted: true });
+      },
+      reset: () => { try { localStorage.removeItem('rsvp_jr'); } catch (e) {} this.setState({ submitted: false }); },
+      submitted: this.state.submitted,
+      notSubmitted: !this.state.submitted,
+      firstNameSuffix: first ? (', ' + first + '!') : '!',
+      confirmMsg: msg
+    };
+  }
+}
+</script>
+</body>
+</html>
