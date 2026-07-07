@@ -440,6 +440,16 @@
     height: 130px;
     object-fit: contain;
   }
+  .venue-map-link {
+    flex: 0 1 auto;
+    min-width: 0;
+    display: inline-flex;
+    cursor: pointer;
+  }
+  .venue-map-link:focus-visible {
+    outline: 2px solid #8B1A1A;
+    outline-offset: 4px;
+  }
   .venue-dragon {
     flex: 0 1 auto;
     min-width: 0;
@@ -608,14 +618,26 @@
     font-size: 12px;
   }
   .text-input {
-    height: 41px;
-    border: 1px solid #8B1A1A;
-    padding: 12px 10px;
-    background: transparent;
+    height: 48px;
+    border: 1px solid #D6C8BC;
+    border-radius: 8px;
+    padding: 0 14px;
+    background: #fff;
     font-size: 14px;
+    line-height: 1.4;
     color: #000;
     outline: none;
     width: 100%;
+    transition: background .15s, border-color .15s, box-shadow .15s;
+  }
+  .text-input:hover {
+    border-color: #BFAE9D;
+    background: #fff;
+  }
+  .text-input:focus {
+    border-color: #8B1A1A;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.24);
   }
   .choice-row {
     gap: 12px;
@@ -803,7 +825,9 @@
           <span class="venue-address">Via Firenze, 83, 59100 Prato PO</span>
         </div>
         <div class="venue-images">
-          <img src="uploads/IMG_0824.PNG" alt="La Limonaia 22" class="float-2 venue-photo" />
+          <a href="{{mapsUrl}}" target="_blank" rel="noopener" aria-label="Apri La Limonaia 22 su Google Maps" class="venue-map-link">
+            <img src="uploads/IMG_0824.PNG" alt="La Limonaia 22" class="float-2 venue-photo" />
+          </a>
           <img src="uploads/IMG_0823.PNG" alt="Draghetto" class="float-1 venue-dragon" />
         </div>
         <div class="action-row">
