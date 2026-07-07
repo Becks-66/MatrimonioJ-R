@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Winky+Sans:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #E8E2D6; }
+  * { box-sizing: border-box; }
+  input::placeholder, textarea::placeholder { color: #6D6463; opacity: 0.55; }
+  input, textarea, button { font-family: 'Inter', system-ui, sans-serif; }
+  @keyframes lanternSwing {
+    0%, 100% { transform: translateX(-50%) rotate(-1.6deg); }
+    50%      { transform: translateX(-50%) rotate(1.6deg); }
+  }
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-9px); }
+  }
+  @keyframes floatEnvelope {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50%      { transform: translateY(-8px) rotate(2deg); }
+  }
+  .float-1 { animation: floatY 3.2s ease-in-out infinite; will-change: transform; }
+  .float-2 { animation: floatY 4.3s ease-in-out infinite; animation-delay: -0.8s; will-change: transform; }
+  .float-3 { animation: floatY 3.8s ease-in-out infinite; animation-delay: -1.4s; will-change: transform; }
+  .float-envelope { animation: floatEnvelope 3.5s ease-in-out infinite; animation-delay: -0.5s; transform-origin: 50% 40%; will-change: transform; }
+  @keyframes revealUp {
+    from { opacity: 0; transform: translateY(64px) scale(0.94); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .reveal { opacity: 1; }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        opacity: 0;
+        animation: revealUp cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-timeline: view();
+        animation-range: entry 2% entry 40%;
+      }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lantern-header, .float-1, .float-2, .float-3, .float-envelope { animation: none !important; }
+  }
+</style>
+</helmet>
+
+<div style="width:100%;max-width:430px;margin:0 auto;background-color:#FCF9F1;background-image:url('assets/clouds.svg');background-size:260px 220px;background-repeat:repeat;min-height:100vh;position:relative;overflow:visible;box-shadow:0 0 60px rgba(139,26,26,0.08);">
+
+  <header style="position:sticky;top:0;z-index:20;width:100%;height:132px;">
+    <div aria-hidden="true" style="position:absolute;inset:0;background:rgba(252,249,241,0.55);backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px) saturate(1.1);-webkit-mask-image:linear-gradient(to bottom, #000 72%, transparent 100%);mask-image:linear-gradient(to bottom, #000 72%, transparent 100%);pointer-events:none;"></div>
+    <button onClick="{{toggleMenu}}" aria-label="Apri menu" style="position:absolute;left:22px;top:100px;width:26px;height:20px;background:transparent;border:none;padding:0;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;z-index:3;">
+      <span style="display:block;height:2.5px;width:100%;background:#000;border-radius:2px;"></span>
+      <span style="display:block;height:2.5px;width:100%;background:#000;border-radius:2px;"></span>
+      <span style="display:block;height:2.5px;width:100%;background:#000;border-radius:2px;"></span>
+    </button>
+    <img src="assets/header.png" alt="Lanterne cinesi" class="lantern-header" style="position:absolute;left:50%;top:2px;transform:translateX(-50%);transform-origin:50% 0;animation:lanternSwing 5s ease-in-out infinite;width:352px;height:88px;object-fit:contain;pointer-events:none;">
+  </header>
+
+  <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;inset:0;z-index:40;background:#FCF9F1;display:flex;flex-direction:column;padding:28px;max-width:430px;margin:0 auto;">
+      <button onClick="{{closeMenu}}" aria-label="Chiudi menu" style="align-self:flex-start;background:transparent;border:none;font-size:34px;line-height:1;color:#000;cursor:pointer;padding:0;margin-bottom:36px;">×</button>
+      <span style="display:flex;flex-direction:row;gap:10px;align-items:baseline;font-family:'Winky Sans',sans-serif;font-weight:700;font-size:34px;margin-bottom:6px;"><span style="color:#8B1A1A;">Jiayi</span><span style="color:#C9A84C;">&amp;</span><span style="color:#8B1A1A;">Rebecca</span></span>
+      <span style="font-family:'Inter',sans-serif;font-size:13px;letter-spacing:2px;color:#C9A84C;margin-bottom:40px;">6 OTTOBRE 2026 · PRATO</span>
+      <nav style="display:flex;flex-direction:column;gap:4px;">
+        <a href="#hero" onClick="{{closeMenu}}" style="font-family:'Inter',sans-serif;font-weight:500;font-size:20px;color:#000;text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(201,168,76,0.3);">Home</a>
+        <a href="#benvenuti" onClick="{{closeMenu}}" style="font-family:'Inter',sans-serif;font-weight:500;font-size:20px;color:#000;text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(201,168,76,0.3);">Benvenuti</a>
+        <a href="#quando" onClick="{{closeMenu}}" style="font-family:'Inter',sans-serif;font-weight:500;font-size:20px;color:#000;text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(201,168,76,0.3);">Quando e dove</a>
+        <a href="#hotel" onClick="{{closeMenu}}" style="font-family:'Inter',sans-serif;font-weight:500;font-size:20px;color:#000;text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(201,168,76,0.3);">Hotel</a>
+        <a href="#regalo" onClick="{{closeMenu}}" style="font-family:'Inter',sans-serif;font-weight:500;font-size:20px;color:#000;text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(201,168,76,0.3);">Regalo</a>
+        <a href="#faqs" onClick="{{closeMenu}}" style="font-family:'Inter',sans-serif;font-weight:500;font-size:20px;color:#000;text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(201,168,76,0.3);">FAQs</a>
+        <a href="#form" onClick="{{closeMenu}}" style="font-family:'Inter',sans-serif;font-weight:700;font-size:20px;color:#8B1A1A;text-decoration:none;padding:12px 0;">Conferma presenza</a>
+      </nav>
+    </div>
+  </sc-if>
+
+  <main>
+
+    <section id="hero" style="padding:14px 28px 52px;display:flex;flex-direction:column;gap:26px;align-items:center;">
+      <img src="assets/logo.png" alt="Doppia felicità" style="width:230px;height:112px;object-fit:cover;object-position:center;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;background:#FCF9F1;border-radius:20px;padding:10px 20px;box-shadow:0 0 28px 12px #FCF9F1;position:relative;">
+        <span style="font-family:'Winky Sans',sans-serif;font-weight:700;font-size:56px;line-height:1.05;color:#8B1A1A;">Jiayi</span>
+        <span style="font-family:'Winky Sans',sans-serif;font-weight:700;font-size:34px;line-height:1;color:#C9A84C;">&amp;</span>
+        <span style="font-family:'Winky Sans',sans-serif;font-weight:700;font-size:56px;line-height:1.05;color:#8B1A1A;">Rebecca</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:center;background:#FCF9F1;border-radius:20px;padding:10px 22px;box-shadow:0 0 28px 12px #FCF9F1;position:relative;">
+        <span style="font-family:'Inter',sans-serif;font-size:13px;letter-spacing:2px;color:#8B1A1A;">MARTEDÍ</span>
+        <span style="font-family:'Inter',sans-serif;font-weight:400;font-size:34px;line-height:1.2;color:#C9A84C;">6 Ottobre, 2026</span>
+        <span style="font-family:'Inter',sans-serif;font-size:13px;letter-spacing:2px;color:#8B1A1A;">PRATO</span>
+      </div>
+      <sc-if value="{{showCountdown}}" hint-placeholder-val="{{true}}">
+        <div style="border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px #C9A84C;display:flex;flex-direction:row;gap:14px;padding:16px 22px;align-items:flex-start;justify-content:center;">
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:44px;">
+            <span style="font-family:'Winky Sans',sans-serif;font-weight:500;font-size:40px;line-height:1;color:#000;">{{days}}</span>
+            <span style="font-family:'Winky Sans',sans-serif;font-weight:400;font-size:15px;line-height:1;color:#000;">GIORNI</span>
+          </div>
+          <span style="font-family:'Winky Sans',sans-serif;font-size:40px;line-height:1;color:#000;">:</span>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:26px;">
+            <span style="font-family:'Winky Sans',sans-serif;font-weight:500;font-size:40px;line-height:1;color:#000;">{{hours}}</span>
+            <span style="font-family:'Winky Sans',sans-serif;font-weight:400;font-size:15px;line-height:1;color:#000;">ORE</span>
+          </div>
+          <span style="font-family:'Winky Sans',sans-serif;font-size:40px;line-height:1;color:#000;">:</span>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:48px;">
+            <span style="font-family:'Winky Sans',sans-serif;font-weight:500;font-size:40px;line-height:1;color:#000;">{{minutes}}</span>
+            <span style="font-family:'Winky Sans',sans-serif;font-weight:400;font-size:15px;line-height:1;color:#000;">MINUTI</span>
+          </div>
+        </div>
+      </sc-if>
+    </section>
+
+    <section id="benvenuti" class="reveal" style="padding:28px 28px 40px;display:flex;flex-direction:column;gap:20px;align-items:center;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;background:#FCF9F1;border-radius:20px;padding:10px 20px;box-shadow:0 0 28px 12px #FCF9F1;position:relative;">
+        <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:16px;letter-spacing:1.5px;color:#C9A84C;text-align:center;">BENVENUTI</span>
+        <div style="display:flex;flex-direction:row;gap:4px;justify-content:center;align-items:center;width:100px;height:6px;opacity:0.8;">
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="height:2px;flex:1;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;align-items:center;background:#FCF9F1;border-radius:22px;padding:18px 16px;box-shadow:0 0 32px 15px #FCF9F1;position:relative;">
+        <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;">Se siete finiti qui é perché siete stati ufficialmente invitati al nostro matrimonio! O avete rubato l'invito a qualcun'altro.</p>
+        <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;">Pensiamo che questo sia un ottimo anno per sposarsi. Del resto sono convolati a nozze Zendaya e Tom Holland, Dua Lipa e Callum Turner, Taylor Swift e Travis Kelce, Charles Leclerc e Alexandra. Poi Damiano ha fatto la proposta a Dove Cameron, e sembra che siano fidanzati anche Harry Styles e Zoë Kravitz.</p>
+        <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;">Il nostro matrimonio manterrà sicuramente un profilo più basso, e gli sposi saranno molto meno fotogenici. Speriamo comunque che parteciperete e che vi divertiate lo stesso!</p>
+        <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;">Cercheremo di unire elementi cinesi ed elementi tipici italiani, per celebrare sia lo sposo che la sposa. Non promettiamo grandi cose, ma cercheremo di fare del nostro meglio.</p>
+      </div>
+      <sc-if value="{{showDragons}}" hint-placeholder-val="{{true}}">
+        <img src="assets/draghetto.png" alt="Draghetto" class="float-1" style="width:250px;height:auto;margin-top:4px;">
+      </sc-if>
+    </section>
+
+    <section id="quando" class="reveal" style="padding:28px 28px 40px;display:flex;flex-direction:column;gap:22px;align-items:center;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;background:#FCF9F1;border-radius:20px;padding:10px 20px;box-shadow:0 0 28px 12px #FCF9F1;position:relative;">
+        <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:16px;letter-spacing:1.5px;color:#C9A84C;text-align:center;">QUANDO E DOVE</span>
+        <div style="display:flex;flex-direction:row;gap:4px;justify-content:center;align-items:center;width:100px;height:6px;opacity:0.8;">
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="height:2px;flex:1;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+        </div>
+      </div>
+
+      <div style="width:280px;border-radius:12px;border:1px solid #C9A84C;background:#FCF9F1;display:flex;flex-direction:column;gap:16px;padding:20px 32px;align-items:flex-start;">
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:12px;color:#C9A84C;">Giorno</span>
+          <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:24px;line-height:1;color:#8B1A1A;white-space:nowrap;">6 Ottobre 2026</span>
+        </div>
+        <div style="width:100%;height:1px;background:#C9A84C;opacity:0.3;"></div>
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:12px;color:#C9A84C;">CERIMONIA</span>
+          <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:24px;line-height:1;color:#8B1A1A;">11:30</span>
+        </div>
+        <div style="width:100%;height:1px;background:#C9A84C;opacity:0.3;"></div>
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:12px;color:#C9A84C;">APERITIVO E PRANZO</span>
+          <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:24px;line-height:1;color:#8B1A1A;">12:30 - 19:30</span>
+        </div>
+      </div>
+
+      <div style="width:100%;display:flex;flex-direction:column;gap:16px;align-items:stretch;">
+        <div style="display:flex;flex-direction:column;gap:2px;align-items:flex-start;">
+          <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:12px;color:#C9A84C;">PRESSO</span>
+          <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:20px;line-height:1.15;color:#8B1A1A;">La Limonaia 22</span>
+          <span style="font-family:'Inter',sans-serif;font-weight:400;font-size:13px;color:#6D6463;">Via Firenze, 83, 59100 Prato PO</span>
+        </div>
+        <div style="display:flex;flex-direction:row;gap:12px;align-items:center;justify-content:center;">
+          <img src="uploads/IMG_0824.PNG" alt="La Limonaia 22" class="float-2" style="flex:0 1 auto;min-width:0;height:130px;object-fit:contain;" />
+          <img src="uploads/IMG_0823.PNG" alt="Draghetto" class="float-1" style="flex:0 1 auto;min-width:0;height:210px;object-fit:contain;" />
+        </div>
+        <div style="display:flex;flex-direction:row;gap:12px;align-items:stretch;">
+          <a href="{{mapsUrl}}" target="_blank" rel="noopener" style="flex:0 0 auto;border-radius:100px;background:#8B1A1A;padding:16px 18px;display:flex;justify-content:center;align-items:center;text-decoration:none;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;color:#fff;">Come arrivare</a>
+          <a href="{{icsUrl}}" download="matrimonio-jiay-rebecca.ics" style="flex:1;border-radius:100px;background:#fff;box-shadow:inset 0 0 0 1px #8B1A1A;padding:16px 18px;display:flex;justify-content:center;align-items:center;text-decoration:none;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;color:#8B1A1A;text-align:center;">Aggiungi al calendario</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="hotel" class="reveal" style="padding:28px 28px 40px;display:flex;flex-direction:column;gap:20px;align-items:center;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;background:#FCF9F1;border-radius:20px;padding:10px 20px;box-shadow:0 0 28px 12px #FCF9F1;position:relative;">
+        <span style="font-family:'Geist',sans-serif;font-weight:600;font-size:16px;letter-spacing:1.5px;color:#C9A84C;text-align:center;">E SE NON SON DI PRATO? O PEGGIO, NON SONO PROPRIO TOSCANO?</span>
+        <div style="display:flex;flex-direction:row;gap:4px;justify-content:center;align-items:center;width:100px;height:6px;opacity:0.8;">
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="height:2px;flex:1;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;align-items:center;background:#FCF9F1;border-radius:22px;padding:18px 16px;box-shadow:0 0 32px 15px #FCF9F1;position:relative;">
+        <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;">Innanzitutto, partiamo malissimo. Tuttavia, per chi abita lontano o ha necessità, offriremo la possibilitá di alloggiare in un hotel nella fantastica Prato la notte precedente la cerimonia.</p>
+        <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;">Potete farci sapere nel form apposito in fondo alla pagina.</p>
+        <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;">Nei prossimi mesi inseriremo qui sotto le informazioni sull'Hotel prenotato.</p>
+      </div>
+      <img src="assets/hotel-dragon.png" alt="Info hotel prossimamente" class="float-2" style="width:250px;max-width:85%;height:auto;object-fit:contain;">
+    </section>
+
+    <section id="regalo" class="reveal" style="padding:28px 28px 40px;display:flex;flex-direction:column;gap:20px;align-items:center;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;background:#FCF9F1;border-radius:20px;padding:10px 20px;box-shadow:0 0 28px 12px #FCF9F1;position:relative;">
+        <span style="font-family:'Geist',sans-serif;font-weight:600;font-size:16px;letter-spacing:1.5px;color:#C9A84C;text-align:center;">TUTTO BELLO MA... IL REGALO?</span>
+        <div style="display:flex;flex-direction:row;gap:4px;justify-content:center;align-items:center;width:100px;height:6px;opacity:0.8;">
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="height:2px;flex:1;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+        </div>
+      </div>
+      <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;background:#FCF9F1;border-radius:18px;padding:14px 16px;box-shadow:0 0 30px 12px #FCF9F1;position:relative;">La vostra presenza al matrimonio é il regalo più bello di tutti. Però, se desiderate omaggiarci anche di un bel dono, fatelo seguendo l'usanza cinese delle buste rosse (che vi abbiamo fornito con l'invito).</p>
+      <div style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;">
+        <img src="assets/dragon-glasses.png" alt="Draghetto con occhiali da sole che lancia le buste rosse" class="float-3" style="width:250px;height:auto;object-fit:contain;position:relative;z-index:2;">
+        <img src="assets/red-envelope.png" alt="Busta rossa (Hongbao)" class="float-envelope" style="width:160px;height:auto;object-fit:contain;margin-left:-36px;position:relative;z-index:1;">
+      </div>
+      <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;background:#FCF9F1;border-radius:18px;padding:14px 16px;box-shadow:0 0 30px 12px #FCF9F1;position:relative;">In Cina si usa donare agli sposi delle buste rosse (<em data-om-id="b171ace9:132">Hongbao</em>), contenenti una somma di denaro a scelta dell'ospite. La busta é rossa, poiché é il colore che per eccellenza simboleggia fortuna. La somma dovrebbe essere preferibilmente pari e non contenere il numero 4, ma gli 8 sono graditi.</p>
+      <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;background:#FCF9F1;border-radius:18px;padding:14px 16px;box-shadow:0 0 30px 12px #FCF9F1;position:relative;">Se invece vi sentite generosi e volete allegare alla busta un regalo fisico, potete scegliere tra gli oggetti inseriti in questa <a href="#" style="color:#8B1A1A;font-weight:700;text-decoration:underline;">lista Amazon</a>.</p>
+    </section>
+
+    <section id="faqs" class="reveal" style="padding:28px 28px 40px;display:flex;flex-direction:column;gap:20px;align-items:stretch;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;background:#FCF9F1;border-radius:20px;padding:10px 20px;box-shadow:0 0 28px 12px #FCF9F1;position:relative;">
+        <span style="font-family:'Geist',sans-serif;font-weight:600;font-size:16px;letter-spacing:1.5px;color:#C9A84C;text-align:center;">FAQs</span>
+        <div style="display:flex;flex-direction:row;gap:4px;justify-content:center;align-items:center;width:100px;height:6px;opacity:0.8;">
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="height:2px;flex:1;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+        </div>
+      </div>
+      <p style="margin:0 0 4px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;background:#FCF9F1;border-radius:18px;padding:14px 16px;box-shadow:0 0 30px 12px #FCF9F1;position:relative;">Non poteva mancare la sezione delle domande più frequenti! In realtà nessuno ci ha chiesto niente, ma rispondiamo in anticipo ai vostri dubbi.</p>
+      <sc-for list="{{faqs}}" as="f" hint-placeholder-count="5">
+        <div style="border-top:1px solid rgba(201,168,76,0.4);background:#FCF9F1;box-shadow:0 0 30px 10px #FCF9F1;position:relative;padding:0 4px;">
+          <button onClick="{{f.toggle}}" style="width:100%;background:transparent;border:none;padding:16px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;text-align:left;">
+            <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:14px;line-height:1.4;color:#000;">{{f.q}}</span>
+            <span style="{{f.chevron}}">+</span>
+          </button>
+          <sc-if value="{{f.open}}" hint-placeholder-val="{{false}}">
+            <p style="margin:0;padding:0 0 16px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;color:#6D6463;white-space:pre-line;">{{f.a}}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+    </section>
+
+    <section id="form" class="reveal" style="padding:28px 20px 56px;display:flex;flex-direction:column;gap:24px;align-items:center;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;background:#FCF9F1;border-radius:20px;padding:10px 20px;box-shadow:0 0 28px 12px #FCF9F1;position:relative;">
+        <span style="font-family:'Geist',sans-serif;font-weight:600;font-size:16px;letter-spacing:1.5px;color:#C9A84C;text-align:center;">CONFERMACI LA TUA PRESENZA</span>
+        <span style="font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;text-align:center;color:#000;">Rispondi al form entro il 10 di Agosto.</span>
+        <div style="display:flex;flex-direction:row;gap:4px;justify-content:center;align-items:center;width:100px;height:6px;opacity:0.8;">
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="height:2px;flex:1;background:#C9A84C;"></div>
+          <div style="width:6px;height:6px;border-radius:100px;background:#C9A84C;"></div>
+          <div style="width:4px;height:4px;border-radius:100px;background:#C9A84C;"></div>
+        </div>
+      </div>
+
+      <sc-if value="{{submitted}}" hint-placeholder-val="{{false}}">
+        <div style="width:100%;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px #C9A84C;display:flex;flex-direction:column;gap:14px;padding:40px 24px;align-items:center;text-align:center;">
+          <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:30px;color:#8B1A1A;">Grazie{{firstNameSuffix}}</span>
+          <p style="margin:0;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;color:#000;">{{confirmMsg}}</p>
+          <button onClick="{{reset}}" style="margin-top:6px;background:transparent;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;font-size:13px;color:#C9A84C;text-decoration:underline;">Modifica la risposta</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{notSubmitted}}" hint-placeholder-val="{{true}}">
+        <div style="width:100%;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px #C9A84C;display:flex;flex-direction:column;gap:32px;padding:32px 16px;align-items:stretch;">
+
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="font-family:'Inter',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;color:#000;">NOME/I</label>
+            <input value="{{nome}}" onInput="{{onNome}}" placeholder="Il tuo (o i vostri) nomi in caso di invito di coppia" style="height:41px;border:1px solid #8B1A1A;padding:12px 10px;background:transparent;font-size:14px;color:#000;outline:none;width:100%;">
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <label style="font-family:'Inter',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;color:#000;">SARAI / SARETE PRESENTE/I ALLA CERIMONIA?</label>
+            <div style="display:flex;flex-direction:row;gap:12px;">
+              <div onClick="{{setPresYes}}" style="{{presYesStyle}}">Certo che ci sono!</div>
+              <div onClick="{{setPresNo}}" style="{{presNoStyle}}">Purtroppo non verrò</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <label style="font-family:'Inter',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;color:#000;">HAI / AVETE BISOGNO DI UN HOTEL PER LA NOTTE PRECEDENTE LA CERIMONIA?</label>
+            <div style="display:flex;flex-direction:row;gap:12px;">
+              <div onClick="{{setHotelYes}}" style="{{hotelYesStyle}}">Sì</div>
+              <div onClick="{{setHotelNo}}" style="{{hotelNoStyle}}">No</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="font-family:'Inter',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;color:#000;">DIETA, ALLERGIE O ALTRO</label>
+            <input value="{{diet}}" onInput="{{onDiet}}" placeholder="vegetariano, vegano, celiachia, allergie, ..." style="height:41px;border:1px solid #8B1A1A;padding:12px 10px;background:transparent;font-size:14px;color:#000;outline:none;width:100%;">
+          </div>
+
+          <button onClick="{{submit}}" style="{{submitStyle}}">Invia conferma</button>
+        </div>
+      </sc-if>
+    </section>
+
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;weddingDateTime&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;2026-10-06T11:30:00&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Matrimonio&quot; },
+  &quot;showCountdown&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Matrimonio&quot; },
+  &quot;showDragons&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Matrimonio&quot; }
+}">
+class Component extends DCLogic {
+  state = { menuOpen: false, faqOpen: {}, nome: '', diet: '', presence: null, hotel: null, submitted: false, now: Date.now() };
+
+  componentDidMount() {
+    this._t = setInterval(() => this.setState({ now: Date.now() }), 30000);
+    try {
+      const s = JSON.parse(localStorage.getItem('rsvp_jr') || 'null');
+      if (s && s.submitted) this.setState({ submitted: true, nome: s.nome || '', presence: s.presence, hotel: s.hotel, diet: s.diet || '' });
+    } catch (e) {}
+  }
+  componentWillUnmount() { clearInterval(this._t); }
+
+  renderVals() {
+    const target = new Date(this.props.weddingDateTime || '2026-10-06T11:30:00').getTime();
+    let diff = Math.max(0, target - this.state.now);
+    const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+    const h = Math.floor(diff / 3600000); diff -= h * 3600000;
+    const m = Math.floor(diff / 60000);
+
+    const pillBase = {
+      height: '44px', borderRadius: '100px', display: 'flex', flexDirection: 'row',
+      justifyContent: 'center', alignItems: 'center', flex: '1', cursor: 'pointer', textAlign: 'center',
+      fontFamily: "'Inter', system-ui, sans-serif", fontWeight: '700', fontSize: '14px', padding: '0 8px',
+      transition: 'background .15s, color .15s'
+    };
+    const sel = () => ({ ...pillBase, background: '#8B1A1A', color: '#fff' });
+    const unsel = () => ({ ...pillBase, background: 'transparent', boxShadow: 'inset 0 0 0 1px #B1A8A4', color: '#6D6463' });
+
+    const rawFaqs = [
+      { q: 'Cosa si può lanciare agli sposi?', a: 'É consentito tirare il riso agli sposi.\nTuttavia non sono consentiti: coriandoli, materiali non biodegradabili, improperi, maledizioni, sassi.\nMa se lanciate cuccioli di gatto, la sposa sarà contenta di prenderli al volo.' },
+      { q: 'C\u2019é un dress code particolare?', a: 'No, vi accogliamo qualunque cosa decidiate di indossare. Basta che vi sentiate a vostro agio e bellissimi.' },
+      { q: 'Ma il menù? Icchè si mangia?', a: 'Non vi si dice.' },
+      { q: 'C\u2019é il parcheggio?', a: 'La location é dotata di parcheggio privato interno.' },
+      { q: 'Ci sarà un open bar?', a: 'No, non sarà presente un open bar ma non temete, verrà servito dell\u2019alcol durante l\u2019aperitivo e il pranzo.' }
+    ];
+    const faqs = rawFaqs.map((f, i) => ({
+      q: f.q, a: f.a, open: !!this.state.faqOpen[i],
+      toggle: () => this.setState(s => ({ faqOpen: { ...s.faqOpen, [i]: !s.faqOpen[i] } })),
+      chevron: {
+        transform: this.state.faqOpen[i] ? 'rotate(45deg)' : 'rotate(0deg)',
+        transition: 'transform .2s', color: '#8B1A1A', fontSize: '24px', lineHeight: '1',
+        fontFamily: "'Inter', system-ui, sans-serif", flexShrink: 0, display: 'inline-block'
+      }
+    }));
+
+    const ics = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Jiay Rebecca//Matrimonio//IT', 'BEGIN:VEVENT',
+      'UID:matrimonio-jiay-rebecca-20261006', 'DTSTART:20261006T093000Z', 'DTEND:20261006T173000Z',
+      'SUMMARY:Matrimonio Jiay & Rebecca', 'LOCATION:La Limonaia 22\\, Via Firenze 83\\, 59100 Prato PO',
+      'DESCRIPTION:Cerimonia ore 11:30\\, aperitivo e pranzo 12:30-19:30', 'END:VEVENT', 'END:VCALENDAR'
+    ].join('\r\n');
+
+    const first = (this.state.nome || '').trim().split(/\s+/)[0] || '';
+    const camePres = this.state.presence;
+    let msg;
+    if (camePres === 'no') msg = 'Ci dispiace che non potrai esserci. Ci mancherai! Grazie comunque per avercelo fatto sapere.';
+    else msg = 'Abbiamo ricevuto la tua conferma. Non vediamo l\u2019ora di festeggiare con te il 6 Ottobre!';
+
+    const canSubmit = this.state.nome.trim() !== '' && this.state.presence != null;
+    const submitStyle = {
+      height: '56px', borderRadius: '100px', border: 'none', cursor: canSubmit ? 'pointer' : 'not-allowed',
+      background: canSubmit ? '#8B1A1A' : '#C9A2A2', color: '#fff', fontFamily: "'Inter', system-ui, sans-serif",
+      fontWeight: '700', fontSize: '16px', width: '100%', transition: 'background .15s'
+    };
+
+    return {
+      days: String(d), hours: String(h), minutes: String(m),
+      showCountdown: this.props.showCountdown !== false,
+      showDragons: this.props.showDragons !== false,
+      menuOpen: this.state.menuOpen,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      faqs,
+      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=La%20Limonaia%2022%20Via%20Firenze%2083%20Prato',
+      icsUrl: 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics),
+      nome: this.state.nome, diet: this.state.diet,
+      onNome: (e) => this.setState({ nome: e.target.value }),
+      onDiet: (e) => this.setState({ diet: e.target.value }),
+      setPresYes: () => this.setState({ presence: 'yes' }),
+      setPresNo: () => this.setState({ presence: 'no' }),
+      setHotelYes: () => this.setState({ hotel: 'yes' }),
+      setHotelNo: () => this.setState({ hotel: 'no' }),
+      presYesStyle: this.state.presence === 'yes' ? sel() : unsel(),
+      presNoStyle: this.state.presence === 'no' ? sel() : unsel(),
+      hotelYesStyle: this.state.hotel === 'yes' ? sel() : unsel(),
+      hotelNoStyle: this.state.hotel === 'no' ? sel() : unsel(),
+      submitStyle,
+      submit: () => {
+        if (this.state.nome.trim() === '' || this.state.presence == null) return;
+        const data = { submitted: true, nome: this.state.nome, presence: this.state.presence, hotel: this.state.hotel, diet: this.state.diet };
+        try { localStorage.setItem('rsvp_jr', JSON.stringify(data)); } catch (e) {}
+        this.setState({ submitted: true });
+      },
+      reset: () => { try { localStorage.removeItem('rsvp_jr'); } catch (e) {} this.setState({ submitted: false }); },
+      submitted: this.state.submitted,
+      notSubmitted: !this.state.submitted,
+      firstNameSuffix: first ? (', ' + first + '!') : '!',
+      confirmMsg: msg
+    };
+  }
+}
+</script>
+</body>
+</html>
