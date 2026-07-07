@@ -376,6 +376,7 @@
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 12px;
+    line-height: 1.25;
     color: #C9A84C;
   }
   .event-value {
@@ -404,7 +405,7 @@
   .venue-details {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     align-items: flex-start;
   }
   .venue-name {
@@ -418,6 +419,7 @@
     font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-size: 13px;
+    line-height: 1.45;
     color: #6D6463;
   }
   .venue-images,
@@ -935,7 +937,7 @@
 
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{
-  &quot;weddingDateTime&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;2026-10-06T11:30:00&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Matrimonio&quot; },
+  &quot;weddingDateTime&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;2026-10-06T11:30:00+02:00&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Matrimonio&quot; },
   &quot;showCountdown&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Matrimonio&quot; },
   &quot;showDragons&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Matrimonio&quot; }
 }">
@@ -1001,7 +1003,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const target = new Date(this.props.weddingDateTime || '2026-10-06T11:30:00').getTime();
+    const target = new Date(this.props.weddingDateTime || '2026-10-06T11:30:00+02:00').getTime();
     let diff = Math.max(0, target - this.state.now);
     const d = Math.floor(diff / 86400000); diff -= d * 86400000;
     const h = Math.floor(diff / 3600000); diff -= h * 3600000;
