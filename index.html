@@ -901,12 +901,12 @@
 
           <div class="form-field">
             <label class="form-label form-label--small">NOME/I</label>
-            <input value="{{nome}}" onInput="{{onNome}}" placeholder="Il tuo (o i vostri) nomi in caso di invito di coppia" class="text-input">
+            <input value="{{nome}}" onInput="{{onNome}}" placeholder="Il tuo (o i vostri) nomi in caso di invito di coppia" class="text-input" required="{{nameRequired}}" aria-required="true">
           </div>
 
           <div class="form-field form-field--choice">
             <label class="form-label">SARAI / SARETE PRESENTE/I ALLA CERIMONIA?</label>
-            <div class="choice-row">
+            <div class="choice-row" role="radiogroup" aria-label="Presenza" aria-required="true">
               <div onClick="{{setPresYes}}" class="{{presYesClass}}">Certo che ci sono!</div>
               <div onClick="{{setPresNo}}" class="{{presNoClass}}">Purtroppo non verrò</div>
             </div>
@@ -914,7 +914,7 @@
 
           <div class="form-field form-field--choice">
             <label class="form-label">HAI / AVETE BISOGNO DI UN HOTEL PER LA NOTTE PRECEDENTE LA CERIMONIA?</label>
-            <div class="choice-row">
+            <div class="choice-row" role="radiogroup" aria-label="Hotel">
               <div onClick="{{setHotelYes}}" class="{{hotelYesClass}}">Sì</div>
               <div onClick="{{setHotelNo}}" class="{{hotelNoClass}}">No</div>
             </div>
@@ -925,7 +925,7 @@
             <input value="{{diet}}" onInput="{{onDiet}}" placeholder="vegetariano, vegano, celiachia, allergie, ..." class="text-input">
           </div>
 
-          <button onClick="{{submit}}" class="{{submitClass}}">Invia conferma</button>
+          <button onClick="{{submit}}" class="{{submitClass}}" disabled="{{submitDisabled}}">Invia conferma</button>
         </div>
       </sc-if>
     </section>
@@ -984,6 +984,20 @@ class Component extends DCLogic {
 
   goSection(id) {
     this.setState({ menuOpen: false, activeSection: id });
+  }
+
+  submitGoogleForm(data) {
+    const formData = new FormData();
+    formData.append('entry.276266745', data.nome);
+    formData.append('entry.1686584648', data.presence === 'yes' ? 'SI' : 'NO');
+    if (data.hotel) formData.append('entry.30867323', data.hotel === 'yes' ? 'SI' : 'NO');
+    if (data.diet) formData.append('entry.1771050951', data.diet);
+
+    return fetch('https://docs.google.com/forms/d/e/1FAIpQLSfapG7_oFNs2MXKLmODvNB8Ona_oHArZfPN_5cSIXR6rTaV9Q/formResponse', {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    });
   }
 
   renderVals() {
@@ -1058,9 +1072,12 @@ class Component extends DCLogic {
       hotelYesClass: pillClass(this.state.hotel === 'yes'),
       hotelNoClass: pillClass(this.state.hotel === 'no'),
       submitClass,
+      nameRequired: true,
+      submitDisabled: !canSubmit,
       submit: () => {
         if (this.state.nome.trim() === '' || this.state.presence == null) return;
         const data = { submitted: true, nome: this.state.nome, presence: this.state.presence, hotel: this.state.hotel, diet: this.state.diet };
+        this.submitGoogleForm(data).catch(() => {});
         try { localStorage.setItem('rsvp_jr', JSON.stringify(data)); } catch (e) {}
         this.setState({ submitted: true });
       },
