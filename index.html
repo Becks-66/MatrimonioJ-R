@@ -84,14 +84,14 @@
   }
   .menu-indicator-line {
     display: block;
-    width: 14px;
+    width: 20px;
     height: 2px;
     border-radius: 999px;
     background: #6D6463;
     transition: width .18s ease, background .18s ease;
   }
   .menu-indicator-line.is-active {
-    width: 28px;
+    width: 30px;
     background: #8B1A1A;
   }
   .lantern-header {
@@ -685,7 +685,7 @@
   <header class="site-header">
     <div aria-hidden="true" class="site-header-scrim"></div>
     <button onClick="{{toggleMenu}}" aria-label="Apri menu" class="menu-indicator">
-      <sc-for list="{{menuLines}}" as="line" hint-placeholder-count="7">
+      <sc-for list="{{menuLines}}" as="line" hint-placeholder-count="4">
         <span aria-hidden="true" class="{{line.className}}"></span>
       </sc-for>
     </button>
@@ -699,12 +699,12 @@
       <span class="menu-date">6 OTTOBRE 2026 · PRATO</span>
       <nav class="menu-nav">
         <a href="#hero" onClick="{{goHero}}" class="menu-nav-link">Home</a>
-        <a href="#benvenuti" onClick="{{goBenvenuti}}" class="menu-nav-link">Benvenuti</a>
+        <a href="#benvenuti" onClick="{{closeMenu}}" class="menu-nav-link">Benvenuti</a>
         <a href="#quando" onClick="{{goQuando}}" class="menu-nav-link">Quando e dove</a>
-        <a href="#hotel" onClick="{{goHotel}}" class="menu-nav-link">Hotel</a>
+        <a href="#hotel" onClick="{{closeMenu}}" class="menu-nav-link">Hotel</a>
         <a href="#regalo" onClick="{{goRegalo}}" class="menu-nav-link">Regalo</a>
         <a href="#faqs" onClick="{{goFaqs}}" class="menu-nav-link">FAQs</a>
-        <a href="#form" onClick="{{goForm}}" class="menu-nav-link menu-nav-link--primary">Conferma presenza</a>
+        <a href="#form" onClick="{{closeMenu}}" class="menu-nav-link menu-nav-link--primary">Conferma presenza</a>
       </nav>
     </div>
   </sc-if>
@@ -941,14 +941,16 @@
 }">
 class Component extends DCLogic {
   state = { menuOpen: false, activeSection: 'hero', faqOpen: {}, nome: '', diet: '', presence: null, hotel: null, submitted: false, now: Date.now() };
-  sectionIds = ['hero', 'benvenuti', 'quando', 'hotel', 'regalo', 'faqs', 'form'];
+  sectionIds = ['hero', 'quando', 'regalo', 'faqs'];
 
   componentDidMount() {
     this._t = setInterval(() => this.setState({ now: Date.now() }), 30000);
     this._onScroll = () => this.updateActiveSection();
+    this._onHashChange = () => this.syncActiveFromHash();
     window.addEventListener('scroll', this._onScroll, { passive: true });
-    window.addEventListener('hashchange', this._onScroll);
+    window.addEventListener('hashchange', this._onHashChange);
     this.updateActiveSection();
+    this.syncActiveFromHash();
     try {
       const s = JSON.parse(localStorage.getItem('rsvp_jr') || 'null');
       if (s && s.submitted) this.setState({ submitted: true, nome: s.nome || '', presence: s.presence, hotel: s.hotel, diet: s.diet || '' });
@@ -958,12 +960,19 @@ class Component extends DCLogic {
     clearInterval(this._t);
     if (this._onScroll) {
       window.removeEventListener('scroll', this._onScroll);
-      window.removeEventListener('hashchange', this._onScroll);
+      window.removeEventListener('hashchange', this._onHashChange);
+    }
+  }
+
+  syncActiveFromHash() {
+    const id = location.hash ? location.hash.slice(1) : '';
+    if (this.sectionIds.includes(id) && id !== this.state.activeSection) {
+      this.setState({ activeSection: id });
     }
   }
 
   updateActiveSection() {
-    const marker = 190;
+    const marker = 240;
     let active = this.sectionIds[0];
     for (const id of this.sectionIds) {
       const el = document.getElementById(id);
@@ -1031,12 +1040,9 @@ class Component extends DCLogic {
       toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
       closeMenu: () => this.setState({ menuOpen: false }),
       goHero: () => this.goSection('hero'),
-      goBenvenuti: () => this.goSection('benvenuti'),
       goQuando: () => this.goSection('quando'),
-      goHotel: () => this.goSection('hotel'),
       goRegalo: () => this.goSection('regalo'),
       goFaqs: () => this.goSection('faqs'),
-      goForm: () => this.goSection('form'),
       faqs,
       mapsUrl: 'https://www.google.com/maps/search/?api=1&query=La%20Limonaia%2022%20Via%20Firenze%2083%20Prato',
       icsUrl: 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics),
