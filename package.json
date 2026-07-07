@@ -5,12 +5,16 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "vite build",
+    "optimize:support": "esbuild support.js --minify --outfile=public/support.js",
+    "build": "npm run optimize:support && vite build",
     "deploy": "npm run build && gh-pages -d dist",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve:dist": "serve dist --config ../serve.json"
   },
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "gh-pages": "^6.3.0",
+    "serve": "^14.2.6",
     "vite": "8.1.2"
   }
 }
