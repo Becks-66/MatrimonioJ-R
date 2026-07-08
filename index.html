@@ -12,8 +12,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&amp;family=Winky+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&amp;text=%E5%AE%B6%E4%B9%89%E4%B8%BD%E8%B4%9D%E5%8D%A1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Winky+Sans:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet">
 <style>
   html { scroll-behavior: smooth; }
   section[id] { scroll-margin-top: 220px; }
@@ -229,25 +228,15 @@
     box-shadow: inset 0 0 0 1px #C9A84C;
   }
   .hero-name {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
     font-family: 'Winky Sans', sans-serif;
     font-weight: 700;
     font-size: 56px;
     line-height: 1.05;
     color: #8B1A1A;
   }
-  .hero-chinese {
-    font-family: 'Ma Shan Zheng', cursive;
-    font-weight: 400;
-    font-size: 0.58em;
-    line-height: 1;
-    color: #8A6512;
-  }
   .hero-amp {
-    font-family: 'Ma Shan Zheng', cursive;
-    font-weight: 400;
+    font-family: 'Winky Sans', sans-serif;
+    font-weight: 700;
     font-size: 34px;
     line-height: 1;
     color: #8A6512;
@@ -307,6 +296,9 @@
     letter-spacing: 1.5px;
     color: #8A6512;
     text-align: center;
+  }
+  .section-title--display {
+    font-family: 'Geist', sans-serif;
   }
   .ornament {
     display: flex;
@@ -503,22 +495,28 @@
     align-items: center;
     justify-content: center;
     gap: 0;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    width: min(100%, 374px);
+    margin: 0 auto;
   }
   .gift-dragon {
-    width: 250px;
+    width: min(67%, 250px);
     height: auto;
     object-fit: contain;
     position: relative;
     z-index: 2;
+    flex: 0 1 auto;
+    min-width: 0;
   }
   .gift-envelope {
-    width: 160px;
+    width: min(43%, 160px);
     height: auto;
     object-fit: contain;
-    margin-left: -36px;
+    margin-left: -10%;
     position: relative;
     z-index: 1;
+    flex: 0 1 auto;
+    min-width: 0;
   }
   .text-link {
     color: #8B1A1A;
@@ -748,9 +746,9 @@
     <section id="hero" class="section section--hero">
       <img src="optimized/logo.webp" width="230" height="112" alt="Doppia felicità" class="logo-image" decoding="async">
       <div class="soft-panel">
-        <span class="hero-name">Jiayi <span class="hero-chinese" lang="zh-Hans">家义</span></span>
+        <span class="hero-name">Jiayi</span>
         <span class="hero-amp">&amp;</span>
-        <span class="hero-name">Rebecca <span class="hero-chinese" lang="zh-Hans">丽贝卡</span></span>
+        <span class="hero-name">Rebecca</span>
       </div>
       <div class="soft-panel soft-panel--date">
         <span class="eyebrow">MARTEDÍ</span>
@@ -849,7 +847,7 @@
 
     <section id="hotel" class="section reveal">
       <div class="soft-panel">
-        <span class="section-title">E SE NON SON DI PRATO? O PEGGIO, NON SONO PROPRIO TOSCANO?</span>
+        <span class="section-title section-title--display">E SE NON SON DI PRATO? O PEGGIO, NON SONO PROPRIO TOSCANO?</span>
         <div class="ornament">
           <div class="ornament-dot-sm"></div>
           <div class="ornament-dot"></div>
@@ -868,7 +866,7 @@
 
     <section id="regalo" class="section reveal">
       <div class="soft-panel">
-        <span class="section-title">TUTTO BELLO MA... IL REGALO?</span>
+        <span class="section-title section-title--display">TUTTO BELLO MA... IL REGALO?</span>
         <div class="ornament">
           <div class="ornament-dot-sm"></div>
           <div class="ornament-dot"></div>
@@ -888,7 +886,7 @@
 
     <section id="faqs" class="section section--faqs reveal">
       <div class="soft-panel">
-        <span class="section-title">FAQs</span>
+        <span class="section-title section-title--display">FAQs</span>
         <div class="ornament">
           <div class="ornament-dot-sm"></div>
           <div class="ornament-dot"></div>
@@ -913,7 +911,7 @@
 
     <section id="form" class="section section--form reveal">
       <div class="soft-panel">
-        <span class="section-title">CONFERMACI LA TUA PRESENZA</span>
+        <span class="section-title section-title--display">CONFERMACI LA TUA PRESENZA</span>
         <span class="body-copy">Rispondi al form entro il 10 di Agosto.</span>
         <div class="ornament">
           <div class="ornament-dot-sm"></div>
