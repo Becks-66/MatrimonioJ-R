@@ -21,8 +21,8 @@
   input::placeholder, textarea::placeholder { color: #6D6463; opacity: 0.55; }
   input, textarea, button { font-family: 'Inter', system-ui, sans-serif; }
   @keyframes lanternSwing {
-    0%, 100% { transform: translateX(-50%) rotate(-1.6deg); }
-    50%      { transform: translateX(-50%) rotate(1.6deg); }
+    0%, 100% { transform: rotate(var(--lantern-from, -4deg)); }
+    50%      { transform: rotate(var(--lantern-to, 4deg)); }
   }
   @keyframes floatY {
     0%, 100% { transform: translateY(0); }
@@ -101,13 +101,28 @@
     left: 50%;
     top: 2px;
     transform: translateX(-50%);
-    transform-origin: 50% 0;
-    animation: lanternSwing 5s ease-in-out infinite;
     width: 352px;
     height: 88px;
-    object-fit: contain;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
     pointer-events: none;
   }
+  .lantern-item {
+    height: 88px;
+    width: auto;
+    object-fit: contain;
+    object-position: top center;
+    transform-origin: 50% 0;
+    animation: lanternSwing var(--lantern-speed, 4.8s) ease-in-out infinite;
+    animation-delay: var(--lantern-delay, 0s);
+    will-change: transform;
+  }
+  .lantern-item:nth-child(1) { --lantern-from: -4.8deg; --lantern-to: 3.2deg; --lantern-speed: 3.8s; --lantern-delay: -0.2s; }
+  .lantern-item:nth-child(2) { --lantern-from: 3.6deg; --lantern-to: -5.2deg; --lantern-speed: 4.3s; --lantern-delay: -1.1s; }
+  .lantern-item:nth-child(3) { --lantern-from: -3.4deg; --lantern-to: 4.6deg; --lantern-speed: 4s; --lantern-delay: -0.6s; }
+  .lantern-item:nth-child(4) { --lantern-from: 5.2deg; --lantern-to: -3.4deg; --lantern-speed: 4.5s; --lantern-delay: -1.6s; }
+  .lantern-item:nth-child(5) { --lantern-from: -4deg; --lantern-to: 5deg; --lantern-speed: 3.9s; --lantern-delay: -0.9s; }
   .menu-overlay {
     position: fixed;
     inset: 0;
@@ -707,7 +722,7 @@
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .lantern-header, .float-1, .float-2, .float-3, .float-envelope { animation: none !important; }
+    .lantern-item, .float-1, .float-2, .float-3, .float-envelope { animation: none !important; }
   }
 </style>
 </helmet>
@@ -721,7 +736,13 @@
         <span aria-hidden="true" class="{{line.className}}"></span>
       </sc-for>
     </button>
-    <img src="optimized/header.webp" width="352" height="88" alt="Lanterne cinesi" class="lantern-header" fetchpriority="high" decoding="async">
+    <div class="lantern-header" role="img" aria-label="Lanterne cinesi">
+      <img src="optimized/lanterna-tonda.webp" width="82" height="176" alt="" class="lantern-item" fetchpriority="high" decoding="async">
+      <img src="optimized/lanterna-lunga.webp" width="91" height="176" alt="" class="lantern-item" fetchpriority="high" decoding="async">
+      <img src="optimized/lanterna-tonda.webp" width="82" height="176" alt="" class="lantern-item" fetchpriority="high" decoding="async">
+      <img src="optimized/lanterna-lunga.webp" width="91" height="176" alt="" class="lantern-item" fetchpriority="high" decoding="async">
+      <img src="optimized/lanterna-tonda.webp" width="82" height="176" alt="" class="lantern-item" fetchpriority="high" decoding="async">
+    </div>
   </header>
 
   <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
