@@ -959,6 +959,11 @@
             <input value="{{nome}}" onInput="{{onNome}}" placeholder="Il tuo (o i vostri) nomi in caso di invito di coppia" class="text-input" required="{{nameRequired}}" aria-required="true">
           </div>
 
+          <div class="form-field">
+            <label class="form-label form-label--small">PARTECIPANTI</label>
+            <input type="number" min="1" step="1" inputmode="numeric" value="{{partecipanti}}" onInput="{{onPartecipanti}}" placeholder="Numero di persone incluse nella conferma" class="text-input" required="{{partecipantiRequired}}" aria-required="true">
+          </div>
+
           <div class="form-field form-field--choice">
             <label class="form-label">SARAI / SARETE PRESENTE/I ALLA CERIMONIA?</label>
             <div class="choice-row" role="radiogroup" aria-label="Presenza" aria-required="true">
@@ -995,7 +1000,7 @@
   &quot;showDragons&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Matrimonio&quot; }
 }">
 class Component extends DCLogic {
-  state = { menuOpen: false, activeSection: 'hero', faqOpen: {}, nome: '', diet: '', presence: null, hotel: null, submitted: false, now: Date.now() };
+  state = { menuOpen: false, activeSection: 'hero', faqOpen: {}, nome: '', partecipanti: '', diet: '', presence: null, hotel: null, submitted: false, now: Date.now() };
   sectionIds = ['hero', 'quando', 'regalo', 'faqs'];
 
   componentDidMount() {
@@ -1008,7 +1013,7 @@ class Component extends DCLogic {
     this.syncActiveFromHash();
     try {
       const s = JSON.parse(localStorage.getItem('rsvp_jr') || 'null');
-      if (s && s.submitted) this.setState({ submitted: true, nome: s.nome || '', presence: s.presence, hotel: s.hotel, diet: s.diet || '' });
+      if (s) this.setState({ submitted: !!(s.submitted && s.partecipanti), nome: s.nome || '', partecipanti: s.partecipanti || '', presence: s.presence, hotel: s.hotel, diet: s.diet || '' });
     } catch (e) {}
   }
   componentWillUnmount() {
@@ -1044,6 +1049,7 @@ class Component extends DCLogic {
   submitGoogleForm(data) {
     const formData = new FormData();
     formData.append('entry.276266745', data.nome);
+    formData.append('entry.1011786510', data.partecipanti);
     formData.append('entry.1686584648', data.presence === 'yes' ? 'SI' : 'NO');
     if (data.hotel) formData.append('entry.30867323', data.hotel === 'yes' ? 'SI' : 'NO');
     if (data.diet) formData.append('entry.1771050951', data.diet);
@@ -1090,7 +1096,9 @@ class Component extends DCLogic {
     if (camePres === 'no') msg = 'Ci dispiace che non potrai esserci. Ci mancherai! Grazie comunque per avercelo fatto sapere.';
     else msg = 'Abbiamo ricevuto la tua conferma. Non vediamo l\u2019ora di festeggiare con te il 6 Ottobre!';
 
-    const canSubmit = this.state.nome.trim() !== '' && this.state.presence != null;
+    const partecipantiCount = Number(this.state.partecipanti);
+    const hasPartecipanti = this.state.partecipanti.trim() !== '' && Number.isFinite(partecipantiCount) && partecipantiCount >= 1;
+    const canSubmit = this.state.nome.trim() !== '' && hasPartecipanti && this.state.presence != null;
     const submitClass = canSubmit ? 'submit-button' : 'submit-button is-disabled';
     const menuLines = this.sectionIds.map(id => {
       const active = id === this.state.activeSection;
@@ -1115,8 +1123,9 @@ class Component extends DCLogic {
       faqs,
       mapsUrl: 'https://www.google.com/maps/search/?api=1&query=La%20Limonaia%2022%20Via%20Firenze%2083%20Prato',
       icsUrl: 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics),
-      nome: this.state.nome, diet: this.state.diet,
+      nome: this.state.nome, partecipanti: this.state.partecipanti, diet: this.state.diet,
       onNome: (e) => this.setState({ nome: e.target.value }),
+      onPartecipanti: (e) => this.setState({ partecipanti: e.target.value }),
       onDiet: (e) => this.setState({ diet: e.target.value }),
       setPresYes: () => this.setState({ presence: 'yes' }),
       setPresNo: () => this.setState({ presence: 'no' }),
@@ -1128,10 +1137,11 @@ class Component extends DCLogic {
       hotelNoClass: pillClass(this.state.hotel === 'no'),
       submitClass,
       nameRequired: true,
+      partecipantiRequired: true,
       submitDisabled: !canSubmit,
       submit: () => {
-        if (this.state.nome.trim() === '' || this.state.presence == null) return;
-        const data = { submitted: true, nome: this.state.nome, presence: this.state.presence, hotel: this.state.hotel, diet: this.state.diet };
+        if (this.state.nome.trim() === '' || !hasPartecipanti || this.state.presence == null) return;
+        const data = { submitted: true, nome: this.state.nome, partecipanti: this.state.partecipanti, presence: this.state.presence, hotel: this.state.hotel, diet: this.state.diet };
         this.submitGoogleForm(data).catch(() => {});
         try { localStorage.setItem('rsvp_jr', JSON.stringify(data)); } catch (e) {}
         this.setState({ submitted: true });
