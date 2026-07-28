@@ -54,7 +54,7 @@
     top: 0;
     z-index: 20;
     width: 100%;
-    height: 132px;
+    height: 140px;
   }
   .site-header-scrim {
     position: absolute;
@@ -69,13 +69,13 @@
   .menu-indicator {
     position: absolute;
     left: 4px;
-    top: 76px;
+    top: 94px;
     width: 44px;
-    height: 62px;
+    height: 44px;
     background: transparent;
     border: none;
     border-radius: 0;
-    padding: 8px 0;
+    padding: 0;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -99,7 +99,7 @@
   .language-switch {
     position: absolute;
     right: 4px;
-    top: 76px;
+    top: 94px;
     min-width: 78px;
     height: 44px;
     border: 1px solid rgba(139, 26, 26, 0.32);
@@ -905,7 +905,7 @@
           <span class="venue-address">Via Firenze, 83, 59100 Prato PO</span>
         </div>
         <div class="venue-images">
-          <a href="{{mapsUrl}}" target="_blank" rel="noopener" aria-label="{{t.openMaps}}" class="venue-map-link">
+          <a href="{{venueUrl}}" target="_blank" rel="noopener" aria-label="{{t.openVenueWebsite}}" class="venue-map-link">
             <img src="optimized/limonaia-logo.webp" width="130" height="130" alt="La Limonaia 22" class="float-2 venue-photo" loading="lazy" decoding="async" />
           </a>
           <img src="optimized/venue-dragon.webp" width="210" height="210" alt="{{t.littleDragon}}" class="float-1 venue-dragon" loading="lazy" decoding="async" />
@@ -1084,7 +1084,7 @@ const TRANSLATIONS = {
     ceremony: 'CERIMONIA',
     reception: 'APERITIVO E PRANZO',
     atVenue: 'PRESSO',
-    openMaps: 'Apri La Limonaia 22 su Google Maps',
+    openVenueWebsite: 'Apri il sito web di La Limonaia 22',
     directions: 'Come arrivare',
     addCalendar: 'Aggiungi al calendario',
     hotelTitle: 'E SE NON SON DI PRATO? O PEGGIO, NON SONO PROPRIO TOSCANO?',
@@ -1166,7 +1166,7 @@ const TRANSLATIONS = {
     ceremony: '婚礼仪式',
     reception: '开胃酒会与午宴',
     atVenue: '地点',
-    openMaps: '在 Google Maps 中打开 La Limonaia 22',
+    openVenueWebsite: '打开 La Limonaia 22 官方网站',
     directions: '查看路线',
     addCalendar: '添加到日历',
     hotelTitle: '如果我不住在 PRATO 呢？更糟的是，我甚至不是托斯卡纳人？',
@@ -1365,6 +1365,7 @@ class Component extends DCLogic {
       goRegalo: () => this.goSection('regalo'),
       goFaqs: () => this.goSection('faqs'),
       faqs,
+      venueUrl: 'https://www.limonaia22.com/',
       mapsUrl: 'https://www.google.com/maps/search/?api=1&query=La%20Limonaia%2022%20Via%20Firenze%2083%20Prato',
       icsUrl: 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics),
       nome: this.state.nome, partecipanti: this.state.partecipanti, diet: this.state.diet,
