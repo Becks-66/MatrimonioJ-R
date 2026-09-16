@@ -540,12 +540,6 @@
     color: #8B1A1A;
     text-align: center;
   }
-  .hotel-dragon {
-    width: 250px;
-    max-width: 85%;
-    height: auto;
-    object-fit: contain;
-  }
   .gift-images {
     align-items: center;
     justify-content: center;
@@ -930,10 +924,25 @@
       </div>
       <div class="copy-panel">
         <p class="body-copy">{{t.hotel1}}</p>
-        <p class="body-copy">{{t.hotel2}}</p>
-        <p class="body-copy">{{t.hotel3}}</p>
+        <p class="body-copy">{{t.hotelArrival}}</p>
+        <p class="body-copy">{{t.hotelMeeting}}</p>
+        <p class="body-copy">{{t.hotelCheckout}}</p>
       </div>
-      <img src="optimized/hotel-dragon.webp" width="250" height="250" alt="{{t.hotelAlt}}" class="float-2 hotel-dragon" loading="lazy" decoding="async">
+      <div class="venue-block">
+        <div class="venue-details">
+          <span class="venue-name">Art Hotel Milano</span>
+          <span class="venue-address">Via Tiziano, 15, 59100 Prato PO</span>
+        </div>
+        <div class="venue-images">
+          <a href="{{hotelUrl}}" target="_blank" rel="noopener" aria-label="{{t.openHotelWebsite}}" class="venue-map-link">
+            <img src="optimized/art-hotel-milano-logo.jpg" width="130" height="130" alt="Art Hotel Milano" class="float-2 venue-photo" loading="lazy" decoding="async" />
+          </a>
+          <img src="optimized/hotel-dragon.webp" width="210" height="210" alt="{{t.littleDragon}}" class="float-1 venue-dragon" loading="lazy" decoding="async" />
+        </div>
+        <div class="action-row">
+          <a href="{{hotelMapsUrl}}" target="_blank" rel="noopener" class="button-link button-link--primary">{{t.directions}}</a>
+        </div>
+      </div>
     </section>
 
     <section id="regalo" class="section reveal">
@@ -984,7 +993,6 @@
     <section id="form" class="section section--form reveal">
       <div class="soft-panel">
         <span class="section-title section-title--display">{{t.rsvpTitle}}</span>
-        <span class="body-copy">{{t.rsvpDeadline}}</span>
         <div class="ornament">
           <div class="ornament-dot-sm"></div>
           <div class="ornament-dot"></div>
@@ -1088,10 +1096,11 @@ const TRANSLATIONS = {
     directions: 'Come arrivare',
     addCalendar: 'Aggiungi al calendario',
     hotelTitle: 'E SE NON SON DI PRATO? O PEGGIO, NON SONO PROPRIO TOSCANO?',
-    hotel1: 'Innanzitutto, partiamo malissimo. Tuttavia, per chi abita lontano o ha necessità, offriremo la possibilità di alloggiare in un hotel nella fantastica Prato la notte precedente la cerimonia.',
-    hotel2: 'Potete farci sapere nel form apposito in fondo alla pagina.',
-    hotel3: 'Nei prossimi mesi inseriremo qui sotto le informazioni sull’hotel prenotato.',
-    hotelAlt: 'Informazioni sull’hotel prossimamente',
+    hotel1: 'Innanzitutto, partiamo malissimo. Tuttavia, per chi abita lontano o ha necessità, offriamo la possibilità di alloggiare all’Art Hotel Milano, nella fantastica Prato, la notte precedente la cerimonia.',
+    openHotelWebsite: 'Apri il sito web di Art Hotel Milano',
+    hotelArrival: 'Al vostro arrivo basterà indicare i vostri nomi e dire che siete ospiti del matrimonio di Jiayi e Rebecca. Il check-in è disponibile dalle 14:00.',
+    hotelMeeting: 'Vi daremo più avanti ulteriori informazioni sull’orario di ritrovo consigliato in hotel. Siete comunque liberi di arrivare all’orario che preferite, tenendo presente che il check-in è disponibile dalle 14:00.',
+    hotelCheckout: 'La mattina dopo vi consigliamo di fare il check-out prima delle 11:00, prima di andare alla cerimonia. Potete lasciare le valigie in reception.',
     giftTitle: 'TUTTO BELLO MA... IL REGALO?',
     gift1: 'La vostra presenza al matrimonio è il regalo più bello di tutti. Però, se desiderate omaggiarci anche di un bel dono, fatelo seguendo l’usanza cinese delle buste rosse (che vi abbiamo fornito con l’invito).',
     gift2: 'In Cina si usa donare agli sposi delle buste rosse (Hongbao), contenenti una somma di denaro a scelta dell’ospite. La busta è rossa, poiché è il colore che per eccellenza simboleggia fortuna. La somma dovrebbe essere preferibilmente pari e non contenere il numero 4, ma gli 8 sono graditi.',
@@ -1110,7 +1119,6 @@ const TRANSLATIONS = {
       { q: 'Ci sarà un open bar?', a: 'No, non sarà presente un open bar ma non temete, verrà servito dell’alcol durante l’aperitivo e il pranzo.' }
     ],
     rsvpTitle: 'CONFERMACI LA TUA PRESENZA',
-    rsvpDeadline: 'Rispondi al form entro il 10 di Agosto.',
     editResponse: 'Modifica la risposta',
     namesLabel: 'NOME/I',
     namesPlaceholder: 'Il tuo (o i vostri) nomi in caso di invito di coppia',
@@ -1170,10 +1178,11 @@ const TRANSLATIONS = {
     directions: '查看路线',
     addCalendar: '添加到日历',
     hotelTitle: '如果我不住在 PRATO 呢？更糟的是，我甚至不是托斯卡纳人？',
-    hotel1: '不住在 PRATO，这个开场可不太妙（笑）。不过，如果你住得较远或有住宿需要，我们会安排你在婚礼前一晚住进美妙的 PRATO 的一家酒店。',
-    hotel2: '请在页面底部的表单中告诉我们。',
-    hotel3: '接下来几个月，我们会在这里补充已预订酒店的信息。',
-    hotelAlt: '酒店信息即将公布',
+    hotel1: '不住在 PRATO，这个开场可不太妙（笑）。不过，如果你住得较远或有住宿需要，我们已安排好婚礼前一晚在美妙的 PRATO 的 Art Hotel Milano 酒店的住宿。',
+    openHotelWebsite: '打开 Art Hotel Milano 官方网站',
+    hotelArrival: '到达酒店后，只需报上你们的姓名，并说明是来参加 Jiayi 和 Rebecca 婚礼的宾客即可。下午 14:00 起可以办理入住。',
+    hotelMeeting: '关于建议在酒店集合的时间，我们之后会提供更多信息。大家可以自由选择到达时间，只需留意酒店从 14:00 起可以办理入住。',
+    hotelCheckout: '建议大家第二天上午 11:00 前办理退房，再前往婚礼仪式现场。行李可以寄存在酒店前台。',
     giftTitle: '一切都很棒……那礼物呢？',
     gift1: '你能来参加婚礼，就是送给我们最好的礼物。不过，如果你还想送上一份心意，也可以按照中国传统，用红包表达祝福。',
     gift2: '在中国，人们会给新人赠送红包（Hongbao），里面放上由宾客自行决定金额的礼金。红包之所以是红色，是因为红色象征好运。金额最好是偶数，避免出现数字 4，多一些 8 就更受欢迎了。',
@@ -1192,7 +1201,6 @@ const TRANSLATIONS = {
       { q: '会有开放式酒吧吗？', a: '不会设置开放式酒吧，不过别担心，开胃酒会和午宴期间都会供应酒精饮品。' }
     ],
     rsvpTitle: '请确认是否出席',
-    rsvpDeadline: '请在9月6日前提交表单。',
     editResponse: '修改回复',
     namesLabel: '姓名',
     namesPlaceholder: '请输入你的姓名；情侣共同受邀时请输入两人的姓名',
@@ -1366,6 +1374,8 @@ class Component extends DCLogic {
       goFaqs: () => this.goSection('faqs'),
       faqs,
       venueUrl: 'https://www.limonaia22.com/',
+      hotelUrl: 'https://www.arthotel-milano.it/',
+      hotelMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Art%20Hotel%20Milano%20Via%20Tiziano%2015%20Prato',
       mapsUrl: 'https://www.google.com/maps/search/?api=1&query=La%20Limonaia%2022%20Via%20Firenze%2083%20Prato',
       icsUrl: 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics),
       nome: this.state.nome, partecipanti: this.state.partecipanti, diet: this.state.diet,
