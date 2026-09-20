@@ -802,7 +802,9 @@
         <a href="#hotel" onClick="{{closeMenu}}" class="menu-nav-link">{{t.hotelNav}}</a>
         <a href="#regalo" onClick="{{goRegalo}}" class="menu-nav-link">{{t.giftNav}}</a>
         <a href="#faqs" onClick="{{goFaqs}}" class="menu-nav-link">{{t.faqNav}}</a>
-        <a href="#form" onClick="{{closeMenu}}" class="menu-nav-link menu-nav-link--primary">{{t.rsvpNav}}</a>
+        <sc-if value="{{chineseEnabled}}" hint-placeholder-val="{{false}}">
+          <a href="#form" onClick="{{closeMenu}}" class="menu-nav-link menu-nav-link--primary">{{t.rsvpNav}}</a>
+        </sc-if>
       </nav>
     </div>
   </sc-if>
@@ -994,6 +996,7 @@
       </sc-for>
     </section>
 
+    <sc-if value="{{chineseEnabled}}" hint-placeholder-val="{{false}}">
     <section id="form" class="section section--form reveal">
       <div class="soft-panel">
         <span class="section-title section-title--display">{{t.rsvpTitle}}</span>
@@ -1053,6 +1056,7 @@
       </sc-if>
     </section>
 
+    </sc-if>
   </main>
 </div>
 
