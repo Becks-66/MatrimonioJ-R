@@ -883,13 +883,6 @@
           <span class="event-value event-value--nowrap">{{t.eventDate}}</span>
         </div>
         <div class="event-separator"></div>
-        <sc-if value="{{chineseEnabled}}" hint-placeholder-val="{{false}}">
-          <div class="event-card-row">
-            <span class="event-label">{{t.arrival}}</span>
-            <span class="event-value">{{t.arrivalTime}}</span>
-          </div>
-          <div class="event-separator"></div>
-        </sc-if>
         <div class="event-card-row">
           <span class="event-label">{{t.ceremony}}</span>
           <span class="event-value">11:30</span>
@@ -1188,8 +1181,6 @@ const TRANSLATIONS = {
     whenWhereTitle: '时间与地点',
     dayLabel: '日期',
     eventDate: '2026年10月6日',
-    arrival: '到场参加仪式',
-    arrivalTime: '请于 11:00 前到场',
     ceremony: '婚礼仪式',
     reception: '开胃酒会与午宴',
     atVenue: '地点',
