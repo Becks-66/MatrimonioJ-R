@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jiayi & Rebecca - Matrimonio a Prato</title>
-<meta name="description" content="Informazioni per il matrimonio di Jiayi e Rebecca a Prato: programma, luogo, hotel, regalo, calendario e conferma presenza.">
+<title>Jiayi & Rebecca - Ci siamo sposati!</title>
+<meta name="description" content="Ci siamo sposati! Grazie per aver fatto parte della nostra festa. Jiayi e Rebecca, 6 ottobre 2026, Prato.">
 <script src="./support.js" defer></script>
+<script src="./celebration.js" defer></script>
 </head>
 <body>
 <x-dc>
@@ -309,6 +310,22 @@
     line-height: 1.2;
     color: #8A6512;
   }
+  .celebration-card {
+    width: 100%; padding: 24px 18px; text-align: center;
+    background: #fff9ec; border: 1px solid #C9A84C; border-radius: 24px;
+    box-shadow: 0 8px 28px rgba(139, 26, 26, .08);
+  }
+  .celebration-title { margin: 0 0 12px; color: #8B1A1A; font: 700 36px/1.1 'Winky Sans', sans-serif; }
+  .married-counter { color: #8B1A1A; font: 16px/1.5 'Inter', sans-serif; margin: 18px 0; }
+  .married-counter strong { font: 700 36px 'Winky Sans', sans-serif; }
+  .celebrate-button { cursor: pointer; border: 0; min-height: 48px; width: 100%; }
+  .celebrate-button:hover { background: #661313; }
+  button:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid #8A6512; outline-offset: 4px; }
+  .celebration-note { font: 12px/1.5 'Inter', sans-serif; color: #6D6463; margin: 12px 0 0; }
+  .memory-archive { padding-bottom: 32px; }
+  .memory-archive > summary { cursor: pointer; padding: 22px 28px; color: #8B1A1A; font: 500 20px/1.5 'Winky Sans', sans-serif; text-align: center; }
+  .memory-note { padding: 0 28px; text-align: center; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   .countdown {
     border-radius: 12px;
     background: #fff;
@@ -798,13 +815,7 @@
       <nav class="menu-nav">
         <a href="#hero" onClick="{{goHero}}" class="menu-nav-link">{{t.home}}</a>
         <a href="#benvenuti" onClick="{{closeMenu}}" class="menu-nav-link">{{t.welcomeNav}}</a>
-        <a href="#quando" onClick="{{goQuando}}" class="menu-nav-link">{{t.whenWhereNav}}</a>
-        <a href="#hotel" onClick="{{closeMenu}}" class="menu-nav-link">{{t.hotelNav}}</a>
-        <a href="#regalo" onClick="{{goRegalo}}" class="menu-nav-link">{{t.giftNav}}</a>
-        <a href="#faqs" onClick="{{goFaqs}}" class="menu-nav-link">{{t.faqNav}}</a>
-        <sc-if value="{{chineseEnabled}}" hint-placeholder-val="{{false}}">
-          <a href="#form" onClick="{{closeMenu}}" class="menu-nav-link menu-nav-link--primary">{{t.rsvpNav}}</a>
-        </sc-if>
+        <a href="#ricordi" onClick="{{closeMenu}}" class="menu-nav-link">{{t.memoryNav}}</a>
       </nav>
     </div>
   </sc-if>
@@ -823,24 +834,13 @@
         <span class="hero-date">{{t.heroDate}}</span>
         <span class="eyebrow">PRATO</span>
       </div>
-      <sc-if value="{{showCountdown}}" hint-placeholder-val="{{true}}">
-        <div class="countdown">
-          <div class="countdown-unit">
-            <span class="countdown-number">{{days}}</span>
-            <span class="countdown-label">{{t.days}}</span>
-          </div>
-          <span class="countdown-divider">:</span>
-          <div class="countdown-unit countdown-unit--hours">
-            <span class="countdown-number">{{hours}}</span>
-            <span class="countdown-label">{{t.hours}}</span>
-          </div>
-          <span class="countdown-divider">:</span>
-          <div class="countdown-unit countdown-unit--minutes">
-            <span class="countdown-number">{{minutes}}</span>
-            <span class="countdown-label">{{t.minutes}}</span>
-          </div>
-        </div>
-      </sc-if>
+      <div class="celebration-card">
+        <h1 class="celebration-title">{{t.marriedTitle}}</h1>
+        <p class="body-copy">{{t.marriedIntro}}</p>
+        <p class="married-counter"><strong>{{days}}</strong> {{t.marriedDays}}</p>
+        <button type="button" onClick="{{celebrate}}" class="button-link button-link--primary celebrate-button">{{t.celebrate}}</button>
+        <p class="celebration-note">{{t.confettiNote}}</p>
+      </div>
     </section>
 
     <section id="benvenuti" class="section reveal">
@@ -865,6 +865,9 @@
       </sc-if>
     </section>
 
+    <details id="ricordi" class="memory-archive">
+      <summary>{{t.memoryTitle}}</summary>
+      <p class="body-copy memory-note">{{t.memoryIntro}}</p>
     <section id="quando" class="section section--when reveal">
       <div class="soft-panel">
         <span class="section-title">{{t.whenWhereTitle}}</span>
@@ -913,7 +916,7 @@
         </div>
         <div class="action-row">
           <a href="{{mapsUrl}}" target="_blank" rel="noopener" class="button-link button-link--primary">{{t.directions}}</a>
-          <a href="{{icsUrl}}" download="matrimonio-jiayi-rebecca.ics" class="button-link button-link--secondary">{{t.addCalendar}}</a>
+
         </div>
       </div>
     </section>
@@ -1001,67 +1004,7 @@
       </sc-for>
     </section>
 
-    <sc-if value="{{chineseEnabled}}" hint-placeholder-val="{{false}}">
-    <section id="form" class="section section--form reveal">
-      <div class="soft-panel">
-        <span class="section-title section-title--display">{{t.rsvpTitle}}</span>
-        <div class="ornament">
-          <div class="ornament-dot-sm"></div>
-          <div class="ornament-dot"></div>
-          <div class="ornament-line"></div>
-          <div class="ornament-dot"></div>
-          <div class="ornament-dot-sm"></div>
-        </div>
-      </div>
-
-      <sc-if value="{{submitted}}" hint-placeholder-val="{{false}}">
-        <div class="form-card form-card--thanks">
-          <span class="thanks-title">{{thanksTitle}}</span>
-          <p class="body-copy">{{confirmMsg}}</p>
-          <button onClick="{{reset}}" class="edit-response-button">{{t.editResponse}}</button>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{notSubmitted}}" hint-placeholder-val="{{true}}">
-        <div class="form-card form-card--fields">
-
-          <div class="form-field">
-            <label class="form-label form-label--small">{{t.namesLabel}}</label>
-            <input value="{{nome}}" onInput="{{onNome}}" placeholder="{{t.namesPlaceholder}}" class="text-input" required="{{nameRequired}}" aria-required="true">
-          </div>
-
-          <div class="form-field">
-            <label class="form-label form-label--small">{{t.participantsLabel}}</label>
-            <input type="number" min="1" step="1" inputmode="numeric" value="{{partecipanti}}" onInput="{{onPartecipanti}}" placeholder="{{t.participantsPlaceholder}}" class="text-input" required="{{partecipantiRequired}}" aria-required="true">
-          </div>
-
-          <div class="form-field form-field--choice">
-            <label class="form-label">{{t.presenceLabel}}</label>
-            <div class="choice-row" role="radiogroup" aria-label="{{t.presenceAria}}" aria-required="true">
-              <div onClick="{{setPresYes}}" class="{{presYesClass}}">{{t.presenceYes}}</div>
-              <div onClick="{{setPresNo}}" class="{{presNoClass}}">{{t.presenceNo}}</div>
-            </div>
-          </div>
-
-          <div class="form-field form-field--choice">
-            <label class="form-label">{{t.hotelQuestion}}</label>
-            <div class="choice-row" role="radiogroup" aria-label="{{t.hotelAria}}">
-              <div onClick="{{setHotelYes}}" class="{{hotelYesClass}}">{{t.yes}}</div>
-              <div onClick="{{setHotelNo}}" class="{{hotelNoClass}}">{{t.no}}</div>
-            </div>
-          </div>
-
-          <div class="form-field">
-            <label class="form-label">{{t.dietLabel}}</label>
-            <input value="{{diet}}" onInput="{{onDiet}}" placeholder="{{t.dietPlaceholder}}" class="text-input">
-          </div>
-
-          <button onClick="{{submit}}" class="{{submitClass}}" disabled="{{submitDisabled}}">{{t.submit}}</button>
-        </div>
-      </sc-if>
-    </section>
-
-    </sc-if>
+    </details>
   </main>
 </div>
 
@@ -1082,7 +1025,7 @@ const TRANSLATIONS = {
     logoAlt: 'Doppia felicità',
     menuDate: '6 OTTOBRE 2026 · PRATO',
     home: 'Home',
-    welcomeNav: 'Benvenuti',
+    welcomeNav: 'Grazie!',
     whenWhereNav: 'Quando e dove',
     hotelNav: 'Hotel',
     giftNav: 'Regalo',
@@ -1093,11 +1036,11 @@ const TRANSLATIONS = {
     days: 'GIORNI',
     hours: 'ORE',
     minutes: 'MINUTI',
-    welcomeTitle: 'BENVENUTI',
-    welcome1: 'Se siete finiti qui è perché siete stati ufficialmente invitati al nostro matrimonio! O avete rubato l’invito a qualcun altro.',
-    welcome2: 'Pensiamo che questo sia un ottimo anno per sposarsi. Del resto sono convolati a nozze Zendaya e Tom Holland, Dua Lipa e Callum Turner, Taylor Swift e Travis Kelce, Charles Leclerc e Alexandra. Poi Damiano ha fatto la proposta a Dove Cameron, e sembra che siano fidanzati anche Harry Styles e Zoë Kravitz.',
-    welcome3: 'Il nostro matrimonio manterrà sicuramente un profilo più basso, e gli sposi saranno molto meno fotogenici. Speriamo comunque che parteciperete e che vi divertiate lo stesso!',
-    welcome4: 'Cercheremo di unire elementi cinesi ed elementi tipici italiani, per celebrare sia lo sposo che la sposa. Non promettiamo grandi cose, ma cercheremo di fare del nostro meglio.',
+    welcomeTitle: 'IL SÌ È FATTO. LA FESTA RESTA.',
+    welcome1: 'Ci siamo sposati! Il 6 ottobre 2026 ci siamo detti sì a Prato. E no, non era una prova generale.',
+    welcome2: 'Grazie a chi ha festeggiato con noi, a chi ci ha abbracciati e a chi ci ha mandato un pensiero da lontano.',
+    welcome3: 'Lanterne cinesi, cuori italiani e una nuova avventura in due: ci portiamo a casa tutto questo, insieme al vostro affetto.',
+    welcome4: 'Se siete tornati qui per il conto alla rovescia, siete un filo in ritardo. Ma per un altro lancio di coriandoli siete sempre in tempo!',
     littleDragon: 'Draghetto',
     whenWhereTitle: 'QUANDO E DOVE',
     dayLabel: 'Giorno',
@@ -1157,8 +1100,16 @@ const TRANSLATIONS = {
     thanks: 'Grazie',
     calendarSummary: 'Matrimonio Jiayi & Rebecca',
     calendarDescription: 'Cerimonia ore 11:30, aperitivo e pranzo 12:30-19:30',
-    metaTitle: 'Jiayi & Rebecca - Matrimonio a Prato',
-    metaDescription: 'Informazioni per il matrimonio di Jiayi e Rebecca a Prato: programma, luogo, hotel, regalo, calendario e conferma presenza.'
+    metaTitle: 'Jiayi & Rebecca - Ci siamo sposati!',
+    metaDescription: 'Ci siamo sposati! Grazie per aver fatto parte della nostra festa. Jiayi e Rebecca, 6 ottobre 2026, Prato.',
+    marriedTitle: 'Ci siamo sposati!',
+    marriedIntro: 'Missione «sì, lo voglio»: compiuta.',
+    marriedDays: 'giorni di avventura in due',
+    celebrate: 'Ancora coriandoli! 🎉',
+    confettiNote: 'Qui sono ammessi. E non tocca a voi pulire.',
+    memoryNav: 'Il nostro invito',
+    memoryTitle: 'C’era una volta un invito…',
+    memoryIntro: 'Il nostro invito originale, da conservare per ricordo. Programma e informazioni qui sotto si riferiscono al 6 ottobre 2026.',
   },
   zh: {
     languageToggle: '切换到意大利语',
@@ -1168,7 +1119,7 @@ const TRANSLATIONS = {
     logoAlt: '双喜',
     menuDate: '2026年10月6日 · PRATO',
     home: '首页',
-    welcomeNav: '欢迎',
+    welcomeNav: '谢谢你们！',
     whenWhereNav: '时间与地点',
     hotelNav: '酒店',
     giftNav: '礼物',
@@ -1179,11 +1130,11 @@ const TRANSLATIONS = {
     days: '天',
     hours: '小时',
     minutes: '分钟',
-    welcomeTitle: '欢迎',
-    welcome1: '如果你来到了这里，说明你已经正式受邀参加我们的婚礼！或者，你偷了别人的请柬。',
-    welcome2: '我们觉得今年特别适合结婚。毕竟 Zendaya 和 Tom Holland、Dua Lipa 和 Callum Turner、Taylor Swift 和 Travis Kelce、Charles Leclerc 和 Alexandra 都结婚了。Damiano 也向 Dove Cameron 求了婚，听说 Harry Styles 和 Zoë Kravitz 似乎也订婚了。',
-    welcome3: '我们的婚礼肯定会低调得多，新郎新娘也没那么上镜。不过，我们仍然希望你能来，并且玩得开心！',
-    welcome4: '我们会努力把中国元素和意大利传统结合起来，同时庆祝新郎和新娘。我们不敢保证有多盛大，但一定会尽力做到最好。',
+    welcomeTitle: '我们结婚啦，快乐继续！',
+    welcome1: '我们结婚啦！2026年10月6日，我们在 Prato 说了「我愿意」。没错，这次可不是彩排。',
+    welcome2: '谢谢每一位到场庆祝、给我们拥抱，以及从远方送来祝福的你。',
+    welcome3: '中国的灯笼、意大利的浪漫，还有你们满满的爱，陪我们一起开启两个人的新冒险。',
+    welcome4: '如果你是回来看倒计时的，那就来晚了一点。不过，再撒一把彩纸，永远不晚！',
     littleDragon: '小龙',
     whenWhereTitle: '时间与地点',
     dayLabel: '日期',
@@ -1236,8 +1187,16 @@ const TRANSLATIONS = {
     thanks: '谢谢',
     calendarSummary: 'Jiayi & Rebecca 的婚礼',
     calendarDescription: '婚礼仪式 11:30，开胃酒会与午宴 12:30–19:30',
-    metaTitle: 'Jiayi & Rebecca - PRATO 婚礼',
-    metaDescription: 'Jiayi 和 Rebecca 在 PRATO 举办婚礼的相关信息：日程、地点、酒店、礼物、日历及出席确认。'
+    metaTitle: 'Jiayi & Rebecca - 我们结婚啦！',
+    metaDescription: '我们结婚啦！感谢你们的陪伴与祝福。Jiayi 和 Rebecca，2026年10月6日，Prato。',
+    marriedTitle: '我们结婚啦！',
+    marriedIntro: '「我愿意」任务：完成！',
+    marriedDays: '天的双人冒险',
+    celebrate: '再撒一次彩纸！🎉',
+    confettiNote: '这里可以撒，而且不用你打扫。',
+    memoryNav: '我们的请柬',
+    memoryTitle: '从前，有一封请柬……',
+    memoryIntro: '留作纪念的原版请柬。以下日程及信息均为2026年10月6日婚礼当天的安排。',
   }
 };
 
@@ -1252,7 +1211,7 @@ function getInitialLanguage() {
 
 class Component extends DCLogic {
   state = { menuOpen: false, activeSection: 'hero', faqOpen: {}, nome: '', partecipanti: '', diet: '', presence: null, hotel: null, submitted: false, language: getInitialLanguage(), now: Date.now() };
-  sectionIds = ['hero', 'quando', 'regalo', 'faqs'];
+  sectionIds = ['hero', 'benvenuti', 'ricordi'];
 
   componentDidMount() {
     this._t = setInterval(() => this.setState({ now: Date.now() }), 30000);
@@ -1263,6 +1222,7 @@ class Component extends DCLogic {
     this.syncDocumentLanguage(this.state.language);
     this.updateActiveSection();
     this.syncActiveFromHash();
+    this._celebrationTimer = setTimeout(() => window.launchWeddingConfetti?.(), 600);
     try {
       const s = JSON.parse(localStorage.getItem('rsvp_jr') || 'null');
       if (s) this.setState({ submitted: !!(s.submitted && s.partecipanti), nome: s.nome || '', partecipanti: s.partecipanti || '', presence: s.presence, hotel: s.hotel, diet: s.diet || '' });
@@ -1270,6 +1230,8 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     clearInterval(this._t);
+    clearTimeout(this._celebrationTimer);
+    window.stopWeddingConfetti?.();
     if (this._onScroll) {
       window.removeEventListener('scroll', this._onScroll);
       window.removeEventListener('hashchange', this._onHashChange);
@@ -1330,7 +1292,7 @@ class Component extends DCLogic {
     const language = this.state.language === 'zh' ? 'zh' : 'it';
     const t = TRANSLATIONS[language];
     const target = new Date(this.props.weddingDateTime || '2026-10-06T11:30:00+02:00').getTime();
-    let diff = Math.max(0, target - this.state.now);
+    let diff = Math.max(0, this.state.now - target);
     const d = Math.floor(diff / 86400000); diff -= d * 86400000;
     const h = Math.floor(diff / 3600000); diff -= h * 3600000;
     const m = Math.floor(diff / 60000);
@@ -1371,6 +1333,7 @@ class Component extends DCLogic {
 
     return {
       t,
+      celebrate: () => window.launchWeddingConfetti?.(),
       days: String(d), hours: String(h), minutes: String(m),
       showCountdown: this.props.showCountdown !== false,
       showDragons: this.props.showDragons !== false,
